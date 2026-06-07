@@ -60,7 +60,7 @@ export function AppSidebar() {
         </div>
         {!collapsed && (
           <span className="text-lg font-bold tracking-widest text-white uppercase">
-            STCK CLUB
+            SACH MK2
           </span>
         )}
       </div>

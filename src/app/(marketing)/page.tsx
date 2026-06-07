@@ -15,7 +15,7 @@ export default function MarketingPage() {
           <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/40">
             <BarChart3 className="w-4 h-4 text-primary" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-white">STCK CLUB</span>
+          <span className="text-xl font-bold tracking-tight text-white">SACH MK2</span>
         </div>
         <div className="flex items-center gap-4">
           <Link href="/login" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
@@ -42,7 +42,7 @@ export default function MarketingPage() {
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-8 leading-tight">
             Maîtrisez les marchés avec <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-primary">
-              l'Académie STCK
+              l'Académie SACH MK2
             </span>
           </h1>
           <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-12">
@@ -64,7 +64,7 @@ export default function MarketingPage() {
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Nos <span className="text-[#8B5CF6]">Avantages</span>
             </h2>
-            <p className="text-white/60">Découvrez ce qui rend l'académie STCK unique dans l'industrie du trading.</p>
+            <p className="text-white/60">Découvrez ce qui rend l'académie SACH MK2 unique dans l'industrie du trading.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 md:gap-12">
@@ -150,7 +150,7 @@ export default function MarketingPage() {
                     </li>
                     <li className="flex items-start gap-3">
                       <Check className="w-4 h-4 text-white shrink-0 mt-0.5" />
-                      <span className="text-sm text-white/80 font-medium">Accès à la section Outils STCK avec checklist personnelle</span>
+                      <span className="text-sm text-white/80 font-medium">Accès à la section Outils SACH MK2 avec checklist personnelle</span>
                     </li>
                   </ul>
                 </div>
@@ -162,14 +162,14 @@ export default function MarketingPage() {
                   </p>
                   <ul className="space-y-3">
                     {[
-                      'Accès complet à la plateforme STCK',
+                      'Accès complet à la plateforme SACH MK2',
                       'Accès aux canaux VIP du Discord (rôle VIP)',
                       'Accès aux lives quotidiens',
                       'Modules de formation complets, structure établie',
                       'Journal de trading avancé',
                       'Système de backtesting avec tableaux de statistiques',
                       'Bilans journaliers avec image de chaque trade',
-                      'Statistiques des meilleurs setups STCK mensuellement',
+                      'Statistiques des meilleurs setups SACH MK2 mensuellement',
                       'Rediffusions des lives'
                     ].map((item, i) => (
                       <li key={i} className="flex items-start gap-3 opacity-40">
@@ -195,7 +195,7 @@ export default function MarketingPage() {
 
       {/* Footer */}
       <footer className="border-t border-white/5 py-12 text-center text-white/40 text-sm">
-        <p>© {new Date().getFullYear()} STCK CLUB. Tous droits réservés.</p>
+        <p>© {new Date().getFullYear()} SACH MK2. Tous droits réservés.</p>
       </footer>
     </div>
   );

@@ -51,7 +51,7 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* TradeOps custom semantic colors (STCK CLUB Theme) */
+  /* TradeOps custom semantic colors (SACH MK2 Theme) */
   --color-profit: #22c55e;
   --color-profit-muted: #22c55e22;
   --color-loss: #a855f7; /* Vibrant purple for loss instead of red */
@@ -66,7 +66,7 @@
 :root {
   color-scheme: dark;
 
-  /* STCK CLUB Global Dark Violet Theme */
+  /* SACH MK2 Global Dark Violet Theme */
   --background: oklch(0.12 0.05 290); /* Very dark purple, nearly black #0B0510 equivalent */
   --foreground: oklch(0.95 0 0); /* Pure white/off-white */
 
@@ -164,7 +164,7 @@
   text-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
 }
 
-/* Glass effect - Updated for darker STCK CLUB feel */
+/* Glass effect - Updated for darker SACH MK2 feel */
 .glass {
   background: oklch(0.14 0.05 290 / 60%);
   backdrop-filter: blur(16px);
