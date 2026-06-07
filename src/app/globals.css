@@ -196,3 +196,13 @@
   mask-composite: exclude;
   pointer-events: none;
 }
+
+/* Fix Recharts tooltip white background issue */
+.recharts-default-tooltip {
+  background-color: oklch(0.14 0.05 290) !important;
+  border-color: oklch(0.25 0.05 290) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}

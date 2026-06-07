@@ -18,13 +18,9 @@ import {
   calendarHeatmap,
   pnlDelta30d,
 } from '@/lib/metrics/compute';
+import dynamic from 'next/dynamic';
 import { subDays, isAfter, parseISO } from 'date-fns';
 import { StatCard } from './stat-card';
-import { EquityChart } from './charts/equity-chart';
-import { SetupBarChart } from './charts/setup-bar-chart';
-import { SessionBarChart } from './charts/session-bar-chart';
-import { AdherenceScatterChart } from './charts/adherence-scatter';
-import { Heatmap } from './charts/heatmap';
 import {
   Select,
   SelectContent,
@@ -42,6 +38,13 @@ import {
   Flame,
   PiggyBank,
 } from 'lucide-react';
+
+const EquityChart = dynamic(() => import('./charts/equity-chart').then(mod => mod.EquityChart), { ssr: false, loading: () => <div className="h-[280px] w-full animate-pulse bg-muted/20 rounded-lg" /> });
+const SetupBarChart = dynamic(() => import('./charts/setup-bar-chart').then(mod => mod.SetupBarChart), { ssr: false, loading: () => <div className="h-[280px] w-full animate-pulse bg-muted/20 rounded-lg" /> });
+const SessionBarChart = dynamic(() => import('./charts/session-bar-chart').then(mod => mod.SessionBarChart), { ssr: false, loading: () => <div className="h-[280px] w-full animate-pulse bg-muted/20 rounded-lg" /> });
+const AdherenceScatterChart = dynamic(() => import('./charts/adherence-scatter').then(mod => mod.AdherenceScatterChart), { ssr: false, loading: () => <div className="h-[280px] w-full animate-pulse bg-muted/20 rounded-lg" /> });
+const Heatmap = dynamic(() => import('./charts/heatmap').then(mod => mod.Heatmap), { ssr: false, loading: () => <div className="h-[200px] w-full animate-pulse bg-muted/20 rounded-lg" /> });
+
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
@@ -132,7 +135,7 @@ export function DashboardClient({ trades, accounts, payouts, setups, sessions }:
     sessionPnl: pnlBySession(dataTrades, sessionMap),
     scatter: adherenceScatter(dataTrades),
     heatmap: calendarHeatmap(dataTrades),
-  }), [dataTrades, accounts, payouts, setupMap]);
+  }), [dataTrades, accounts, payouts, setupMap, sessionMap]);
 
   return (
     <div className="space-y-6">

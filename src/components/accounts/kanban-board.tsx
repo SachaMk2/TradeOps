@@ -19,10 +19,28 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDroppable } from '@dnd-kit/core';
-import { moveAccount, createAccount } from '@/lib/actions/accounts';
+import { moveAccount, deleteAccount } from '@/lib/actions/accounts';
 import { CreateAccountDialog } from './create-account-dialog';
+import { EditAccountDialog } from './edit-account-dialog';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, MoreHorizontal, Edit2, Trash2 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 
 const PHASES: { key: AccountPhase; label: string; color: string }[] = [
@@ -45,6 +63,8 @@ export function KanbanBoard({ initialAccounts }: KanbanBoardProps) {
   const [accounts, setAccounts] = useState(initialAccounts);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [editAccount, setEditAccount] = useState<Account | null>(null);
+  const [deleteAccountState, setDeleteAccountState] = useState<Account | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
@@ -103,6 +123,22 @@ export function KanbanBoard({ initialAccounts }: KanbanBoardProps) {
     setAccounts((prev) => [...prev, account]);
   }
 
+  function handleUpdated(account: Account) {
+    setAccounts((prev) => prev.map((a) => (a.id === account.id ? account : a)));
+  }
+
+  async function handleDeleteConfirmed() {
+    if (!deleteAccountState) return;
+    const result = await deleteAccount(deleteAccountState.id);
+    if (result.ok) {
+      setAccounts((prev) => prev.filter((a) => a.id !== deleteAccountState.id));
+      toast.success('Account deleted successfully');
+    } else {
+      toast.error('Failed to delete account: ' + result.error);
+    }
+    setDeleteAccountState(null);
+  }
+
   return (
     <>
       <div className="mb-4">
@@ -129,6 +165,8 @@ export function KanbanBoard({ initialAccounts }: KanbanBoardProps) {
                 key={phase.key}
                 phase={phase}
                 accounts={phaseAccounts}
+                onEdit={setEditAccount}
+                onDelete={setDeleteAccountState}
               />
             );
           })}
@@ -146,6 +184,31 @@ export function KanbanBoard({ initialAccounts }: KanbanBoardProps) {
         onOpenChange={setCreateOpen}
         onCreated={handleCreated}
       />
+
+      <EditAccountDialog
+        open={!!editAccount}
+        onOpenChange={(o) => !o && setEditAccount(null)}
+        account={editAccount}
+        onUpdated={handleUpdated}
+      />
+
+      <AlertDialog open={!!deleteAccountState} onOpenChange={(o) => !o && setDeleteAccountState(null)}>
+        <AlertDialogContent className="glass border-border/50">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the account "{deleteAccountState?.nickname || deleteAccountState?.provider_name}".
+              If you prefer to keep the history, move it to the Failed or Passed column instead.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirmed} className="bg-destructive hover:bg-destructive/90 text-white">
+              Delete Account
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
@@ -153,9 +216,13 @@ export function KanbanBoard({ initialAccounts }: KanbanBoardProps) {
 function KanbanColumn({
   phase,
   accounts,
+  onEdit,
+  onDelete,
 }: {
   phase: { key: AccountPhase; label: string; color: string };
   accounts: Account[];
+  onEdit: (account: Account) => void;
+  onDelete: (account: Account) => void;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: phase.key });
 
@@ -189,7 +256,12 @@ function KanbanColumn({
       <SortableContext items={accounts.map((a) => a.id)} strategy={verticalListSortingStrategy}>
         <div className="space-y-2 flex-1 min-h-[100px]">
           {accounts.map((account) => (
-            <SortableAccountCard key={account.id} account={account} />
+            <SortableAccountCard
+              key={account.id}
+              account={account}
+              onEdit={() => onEdit(account)}
+              onDelete={() => onDelete(account)}
+            />
           ))}
         </div>
       </SortableContext>
@@ -197,7 +269,15 @@ function KanbanColumn({
   );
 }
 
-function SortableAccountCard({ account }: { account: Account }) {
+function SortableAccountCard({
+  account,
+  onEdit,
+  onDelete,
+}: {
+  account: Account;
+  onEdit?: () => void;
+  onDelete?: () => void;
+}) {
   const {
     attributes,
     listeners,
@@ -214,7 +294,7 @@ function SortableAccountCard({ account }: { account: Account }) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <AccountCard account={account} isDragging={isDragging} />
+      <AccountCard account={account} isDragging={isDragging} onEdit={onEdit} onDelete={onDelete} />
     </div>
   );
 }
@@ -223,10 +303,14 @@ function AccountCard({
   account,
   isDragging = false,
   isDragOverlay = false,
+  onEdit,
+  onDelete,
 }: {
   account: Account;
   isDragging?: boolean;
   isDragOverlay?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }) {
   return (
     <div
@@ -237,13 +321,33 @@ function AccountCard({
         ${isDragOverlay ? 'shadow-2xl scale-105 rotate-2' : ''}
       `}
     >
-      <div className="flex items-center justify-between mb-1">
+      <div className="flex items-center justify-between mb-1 gap-2">
         <span className="text-xs font-medium text-foreground truncate">
           {account.provider_name}
         </span>
-        <span className="text-xs text-muted-foreground">
-          {formatCurrency(account.account_size)}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-muted-foreground whitespace-nowrap">
+            {formatCurrency(account.account_size)}
+          </span>
+          {!isDragOverlay && onEdit && onDelete && (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-6 w-6 pointer-events-auto shrink-0">
+                  <MoreHorizontal className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="glass border-border/50">
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(); }} className="gap-2">
+                  <Edit2 className="w-4 h-4" />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-border/50" />
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDelete(); }} className="gap-2 text-destructive focus:bg-destructive/10 focus:text-destructive">
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
       </div>
       {account.nickname && (
         <p className="text-xs text-muted-foreground truncate mb-2">{account.nickname}</p>
