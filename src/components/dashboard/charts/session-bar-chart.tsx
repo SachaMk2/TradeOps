@@ -43,6 +43,7 @@ export function SessionBarChart({ data, useR = false }: SessionBarChartProps) {
           tickFormatter={(value) => useR ? `${value}R` : `$${value}`}
         />
         <Tooltip
+          cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
           contentStyle={{
             background: 'oklch(0.08 0 0)',
             border: '1px solid oklch(0.15 0 0)',
