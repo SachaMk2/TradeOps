@@ -47,11 +47,11 @@ export function PayoutsClient({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!accountId || !amount || !splitPercentage || !payoutDate) return;
+    if (!amount || !splitPercentage || !payoutDate) return;
 
     setLoading(true);
     const result = await createPayout({
-      account_id: accountId,
+      account_id: accountId === 'none' || !accountId ? null : accountId,
       amount: parseFloat(amount),
       split_percentage: parseInt(splitPercentage, 10),
       payout_date: new Date(payoutDate).toISOString(),
@@ -107,20 +107,23 @@ export function PayoutsClient({
             </SheetHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label>Account</Label>
-                <Select value={accountId} onValueChange={(v) => v && setAccountId(v)}>
+                <Label>Account (Optional)</Label>
+                <Select value={accountId} onValueChange={(v) => setAccountId(v || 'none')}>
                   <SelectTrigger className="bg-background/50">
                     <SelectValue placeholder="Select account..." />
                   </SelectTrigger>
                   <SelectContent>
                     {fundedAccounts.length === 0 ? (
-                      <SelectItem value="none" disabled>No funded accounts available</SelectItem>
+                      <SelectItem value="none">No funded accounts available</SelectItem>
                     ) : (
-                      fundedAccounts.map((a) => (
-                        <SelectItem key={a.id} value={a.id}>
-                          {a.nickname || a.provider_name}
-                        </SelectItem>
-                      ))
+                      <>
+                        <SelectItem value="none">None</SelectItem>
+                        {fundedAccounts.map((a) => (
+                          <SelectItem key={a.id} value={a.id}>
+                            {a.nickname || a.provider_name}
+                          </SelectItem>
+                        ))}
+                      </>
                     )}
                   </SelectContent>
                 </Select>
@@ -211,7 +214,7 @@ export function PayoutsClient({
                       </div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap font-medium">
-                      {acc ? (acc.nickname || acc.provider_name) : 'Unknown Account'}
+                      {acc ? (acc.nickname || acc.provider_name) : '—'}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-right text-muted-foreground">
                       {p.split_percentage}%

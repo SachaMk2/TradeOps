@@ -140,7 +140,7 @@ export async function getPayouts(accountId?: string): Promise<ActionResult<Payou
   return { ok: true, data: (data ?? []) as Payout[] };
 }
 
-export async function createPayout(input: { account_id: string; amount: number; split_percentage: number; payout_date: string; notes?: string }): Promise<ActionResult<Payout>> {
+export async function createPayout(input: { account_id?: string | null; amount: number; split_percentage: number; payout_date: string; notes?: string }): Promise<ActionResult<Payout>> {
   if (isDevBypass()) {
     const { mockStore } = await import('@/lib/mock/store');
     const p = mockStore.createPayout(input);
@@ -154,7 +154,7 @@ export async function createPayout(input: { account_id: string; amount: number; 
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase.from('payouts').insert({
-    account_id: input.account_id, user_id: user.id, amount: input.amount,
+    account_id: input.account_id || null, user_id: user.id, amount: input.amount,
     split_percentage: input.split_percentage, payout_date: input.payout_date, notes: input.notes || '',
   }).select().single();
   if (error) return { ok: false, error: error.message };

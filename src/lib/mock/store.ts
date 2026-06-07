@@ -357,9 +357,9 @@ export const mockStore = {
   // PAYOUTS
   getPayouts: (accountId?: string) =>
     accountId ? payouts.filter((p) => p.account_id === accountId) : [...payouts],
-  createPayout: (input: { account_id: string; amount: number; split_percentage: number; payout_date: string; notes?: string }) => {
+  createPayout: (input: { account_id?: string | null; amount: number; split_percentage: number; payout_date: string; notes?: string }) => {
     const p: Payout = {
-      id: uuid(), account_id: input.account_id, user_id: MOCK_USER_ID,
+      id: uuid(), account_id: input.account_id || null, user_id: MOCK_USER_ID,
       amount: input.amount, split_percentage: input.split_percentage, payout_date: input.payout_date, notes: input.notes || '',
       created_at: new Date().toISOString(),
     };

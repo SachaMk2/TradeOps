@@ -107,7 +107,7 @@ export interface TradeExecution {
 
 export interface Payout {
   id: string;
-  account_id: string;
+  account_id: string | null;
   user_id: string;
   amount: number;
   split_percentage: number;
