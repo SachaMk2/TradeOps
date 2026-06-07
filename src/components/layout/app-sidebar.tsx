@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/tooltip';
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/journal', label: 'Journal', icon: BookOpen },
   { href: '/calendar', label: 'Calendar', icon: CalendarDays },
   { href: '/trades/new', label: 'New Trade', icon: PenLine },
@@ -69,8 +69,8 @@ export function AppSidebar() {
       <nav className="flex-1 py-4 px-2 space-y-1">
         {navItems.map((item) => {
           const isActive =
-            item.href === '/'
-              ? pathname === '/'
+            item.href === '/dashboard'
+              ? pathname === '/dashboard'
               : pathname.startsWith(item.href);
 
           const linkContent = (
