@@ -21,7 +21,7 @@ const colorMap = {
 
 export function StatCard({ icon: Icon, label, value, valueColor, delta, deltaLabel }: StatCardProps) {
   return (
-    <div className="stat-card glass rounded-xl p-5 group hover:scale-[1.02] transition-all duration-300">
+    <div className="stat-card glass interactive-card rounded-xl p-5 group">
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
           {label}

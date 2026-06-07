@@ -24,8 +24,8 @@ export default async function AppLayout({
     <div className="flex min-h-screen">
       <AppSidebar userName={fullName} />
       {needsOnboarding && <OnboardingFlow />}
-      <main className="flex-1 ml-56 transition-all duration-300">
-        <div className="p-6 max-w-[1600px] mx-auto">
+      <main className="flex-1 ml-56 transition-all duration-300 flex flex-col items-center">
+        <div className="p-6 md:p-10 w-full max-w-7xl">
           {children}
         </div>
       </main>

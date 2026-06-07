@@ -20,12 +20,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 export function PayoutsClient({
   accounts,
@@ -95,17 +95,17 @@ export function PayoutsClient({
           )}
         </div>
 
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger render={
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger render={
             <Button className="gap-2">
               <Plus className="w-4 h-4" /> Log Payout
             </Button>
           } />
-          <DialogContent className="sm:max-w-[425px] bg-card border-border/50">
-            <DialogHeader>
-              <DialogTitle>Log New Payout</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+          <SheetContent className="glass border-l-border/50 sm:max-w-[425px] overflow-y-auto">
+            <SheetHeader className="mb-6">
+              <SheetTitle>Log New Payout</SheetTitle>
+            </SheetHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label>Account</Label>
                 <Select value={accountId} onValueChange={(v) => v && setAccountId(v)}>
@@ -170,13 +170,15 @@ export function PayoutsClient({
                   rows={3}
                 />
               </div>
-              <Button type="submit" disabled={loading} className="w-full">
-                {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                Save Payout
-              </Button>
+              <div className="pt-4">
+                <Button type="submit" disabled={loading} className="w-full">
+                  {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                  Save Payout
+                </Button>
+              </div>
             </form>
-          </DialogContent>
-        </Dialog>
+          </SheetContent>
+        </Sheet>
       </div>
 
       <div className="glass rounded-xl overflow-hidden border border-border/50">

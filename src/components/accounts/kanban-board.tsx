@@ -339,8 +339,8 @@ function AccountCard({
   return (
     <div
       className={`
-        glass rounded-lg p-3 cursor-grab active:cursor-grabbing
-        transition-all duration-200
+        glass interactive-card rounded-lg p-3 cursor-grab active:cursor-grabbing
+        transition-all duration-300
         ${isDragging ? 'opacity-30' : ''}
         ${isDragOverlay ? 'shadow-2xl scale-105 rotate-2' : ''}
       `}

@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { createSetup } from '@/lib/actions/setups';
 import { type SetupWithChecklist } from '@/lib/supabase/types';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -54,11 +54,11 @@ export function CreateSetupDialog({ open, onOpenChange, onCreated }: CreateSetup
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass border-border/50 sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Create Setup</DialogTitle>
-        </DialogHeader>
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="glass border-l-border/50 sm:max-w-[425px] overflow-y-auto">
+        <SheetHeader className="mb-6">
+          <SheetTitle>Create Setup</SheetTitle>
+        </SheetHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           <div className="space-y-2">
@@ -102,17 +102,14 @@ export function CreateSetupDialog({ open, onOpenChange, onCreated }: CreateSetup
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={loading || !name.trim()}>
+          <div className="pt-4">
+            <Button type="submit" className="w-full" disabled={loading || !name.trim()}>
               {loading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-              Create
+              Create Setup
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react';
 import { type Account } from '@/lib/supabase/types';
 import { updateAccount } from '@/lib/actions/accounts';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -61,70 +61,38 @@ export function EditAccountDialog({ open, onOpenChange, account, onUpdated }: Ed
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="glass border-border/50 sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Edit Account</DialogTitle>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="glass border-l-border/50 sm:max-w-[425px] overflow-y-auto">
+        <SheetHeader className="mb-6">
+          <SheetTitle>Edit Account</SheetTitle>
+        </SheetHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label>Prop Firm</Label>
-            <Input
-              value={providerName}
-              onChange={(e) => setProviderName(e.target.value)}
-              placeholder="e.g., FTMO, TFT, MyFundedFX"
-              required
-              className="bg-background/50"
-            />
+            <Label>Provider Name</Label>
+            <Input required placeholder="e.g. FTMO, MyForexFunds" value={providerName} onChange={(e) => setProviderName(e.target.value)} className="bg-background/50" />
           </div>
-
           <div className="space-y-2">
-            <Label>Nickname</Label>
-            <Input
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              placeholder="e.g., FTMO 100K #2"
-              className="bg-background/50"
-            />
+            <Label>Nickname (Optional)</Label>
+            <Input placeholder="e.g. Aggressive 100k" value={nickname} onChange={(e) => setNickname(e.target.value)} className="bg-background/50" />
           </div>
-
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Account Size</Label>
-              <Input
-                type="number"
-                value={accountSize}
-                onChange={(e) => setAccountSize(e.target.value)}
-                placeholder="100000"
-                required
-                className="bg-background/50"
-              />
+              <Label>Account Size ($)</Label>
+              <Input required type="number" min="0" step="1000" placeholder="100000" value={accountSize} onChange={(e) => setAccountSize(e.target.value)} className="bg-background/50" />
             </div>
             <div className="space-y-2">
-              <Label>Challenge Fee</Label>
-              <Input
-                type="number"
-                value={challengeFee}
-                onChange={(e) => setChallengeFee(e.target.value)}
-                placeholder="500"
-                required
-                className="bg-background/50"
-              />
+              <Label>Challenge Fee ($)</Label>
+              <Input required type="number" min="0" step="1" placeholder="540" value={challengeFee} onChange={(e) => setChallengeFee(e.target.value)} className="bg-background/50" />
             </div>
           </div>
-
-          <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={loading || !providerName.trim()}>
-              {loading && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+          <div className="pt-4">
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Save Changes
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }

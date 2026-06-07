@@ -171,6 +171,18 @@
   border: 1px solid oklch(1 1 1 / 5%);
 }
 
+/* Global Interactive Card - Premium Hover Effect */
+.interactive-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.interactive-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5), 0 0 20px oklch(0.55 0.2 290 / 10%);
+  background: oklch(0.18 0.08 290 / 60%);
+  border-color: oklch(0.55 0.2 290 / 30%);
+}
+
 /* Grid background pattern - updated for purple */
 .grid-pattern {
   background-image:

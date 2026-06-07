@@ -14,7 +14,7 @@ export function SetupCard({ setup, onClick }: SetupCardProps) {
   return (
     <button
       onClick={onClick}
-      className="glass rounded-xl p-5 text-left w-full transition-all duration-200 hover:scale-[1.02] hover:shadow-lg group"
+      className="glass interactive-card rounded-xl p-5 text-left w-full group"
     >
       {/* Color bar */}
       <div
