@@ -51,19 +51,29 @@ export function AppSidebar() {
       `}
     >
       {/* Logo */}
-      <div className={`flex items-center h-14 px-4 border-b border-sidebar-border ${collapsed ? 'justify-center' : 'gap-3'}`}>
-        <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30 shrink-0">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-primary">
+      <div className={`flex items-center h-20 px-6 border-b border-sidebar-border ${collapsed ? 'justify-center px-4' : 'gap-3'}`}>
+        <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/40 shrink-0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-white">
             <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
             <polyline points="16 7 22 7 22 13" />
           </svg>
         </div>
         {!collapsed && (
-          <span className="text-sm font-bold tracking-tight text-sidebar-foreground">
-            TradeOps
+          <span className="text-lg font-bold tracking-widest text-white uppercase">
+            STCK CLUB
           </span>
         )}
       </div>
+
+      {/* User Welcome Block */}
+      {!collapsed && (
+        <div className="px-4 py-6">
+          <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+            <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">Bienvenue,</p>
+            <p className="text-base font-bold text-white">Opérateur</p>
+          </div>
+        </div>
+      )}
 
       {/* Navigation */}
       <nav className="flex-1 py-4 px-2 space-y-1">
@@ -78,17 +88,17 @@ export function AppSidebar() {
               key={item.href}
               href={item.href}
               className={`
-                flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium
-                transition-all duration-200
+                flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold
+                transition-all duration-300
                 ${collapsed ? 'justify-center px-0' : ''}
                 ${
                   isActive
-                    ? 'bg-sidebar-accent text-sidebar-primary shadow-sm'
-                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground'
+                    ? 'bg-sidebar-accent border border-primary/20 text-white shadow-[0_0_20px_rgba(109,40,217,0.15)]'
+                    : 'text-sidebar-foreground/70 hover:text-white border border-transparent'
                 }
               `}
             >
-              <item.icon className="w-4.5 h-4.5 shrink-0" />
+              <item.icon className={`w-5 h-5 shrink-0 transition-colors ${isActive ? 'text-primary' : ''}`} />
               {!collapsed && <span>{item.label}</span>}
             </Link>
           );

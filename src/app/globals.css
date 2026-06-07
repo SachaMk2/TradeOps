@@ -51,11 +51,11 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* TradeOps custom semantic colors (Modern Clean) */
-  --color-profit: #10b981;
-  --color-profit-muted: #10b98133;
-  --color-loss: #ef4444;
-  --color-loss-muted: #ef444433;
+  /* TradeOps custom semantic colors (STCK CLUB Theme) */
+  --color-profit: #22c55e;
+  --color-profit-muted: #22c55e22;
+  --color-loss: #a855f7; /* Vibrant purple for loss instead of red */
+  --color-loss-muted: #2e106580; /* Deep dark purple background */
   --color-warning: #f59e0b;
   --color-warning-muted: #f59e0b33;
   --color-info: #3b82f6;
@@ -66,54 +66,54 @@
 :root {
   color-scheme: dark;
 
-  /* Global Dark & White Theme with Beautiful Blue Accent */
-  --background: oklch(0.12 0 0); /* Pure dark gray/black */
-  --foreground: oklch(0.92 0.02 255); /* Premium off-white with a touch of blue */
+  /* STCK CLUB Global Dark Violet Theme */
+  --background: oklch(0.12 0.05 290); /* Very dark purple, nearly black #0B0510 equivalent */
+  --foreground: oklch(0.95 0 0); /* Pure white/off-white */
 
-  --card: oklch(0.15 0 0); /* Elevated dark gray */
-  --card-foreground: oklch(0.92 0.02 255);
+  --card: oklch(0.16 0.05 290); /* Elevated dark violet */
+  --card-foreground: oklch(0.95 0 0);
 
-  --popover: oklch(0.15 0 0);
-  --popover-foreground: oklch(0.92 0.02 255);
+  --popover: oklch(0.16 0.05 290);
+  --popover-foreground: oklch(0.95 0 0);
 
-  /* Primary is a very nice, elegant blue */
-  --primary: oklch(0.70 0.12 255); /* Beautiful, crisp blue */
-  --primary-foreground: oklch(0.12 0 0); /* Dark text on primary for contrast */
+  /* Primary is vibrant purple */
+  --primary: oklch(0.55 0.2 290); /* Vibrant purple like #8B5CF6 */
+  --primary-foreground: oklch(0.98 0 0);
 
-  --secondary: oklch(0.20 0 0);
-  --secondary-foreground: oklch(0.92 0.02 255);
+  --secondary: oklch(0.20 0.05 290);
+  --secondary-foreground: oklch(0.95 0 0);
 
-  --muted: oklch(0.18 0 0);
-  --muted-foreground: oklch(0.70 0.04 255); /* highly readable silver/blue gray */
+  --muted: oklch(0.20 0.05 290);
+  --muted-foreground: oklch(0.70 0.05 290); /* Subtle light purple/grey */
 
-  --accent: oklch(0.22 0 0);
-  --accent-foreground: oklch(0.92 0.02 255);
+  --accent: oklch(0.25 0.1 290);
+  --accent-foreground: oklch(0.95 0 0);
 
-  --destructive: oklch(0.60 0.16 20); /* Elegant red */
+  --destructive: oklch(0.60 0.16 20); /* Kept for hard errors, but UI loss is purple */
   --destructive-foreground: oklch(0.98 0 0);
 
-  --border: oklch(0.25 0 0); /* Visible, clean borders */
-  --input: oklch(0.22 0 0);
-  --ring: oklch(0.70 0.12 255); /* Blue focus rings */
+  --border: oklch(0.25 0.05 290);
+  --input: oklch(0.20 0.05 290);
+  --ring: oklch(0.55 0.2 290);
 
-  /* Modern Grayscale/Blue charts */
-  --chart-1: oklch(0.70 0.12 255); /* Blue */
-  --chart-2: oklch(0.75 0 0);
-  --chart-3: oklch(0.55 0 0);
-  --chart-4: oklch(0.35 0 0);
-  --chart-5: oklch(0.20 0 0);
+  /* Modern Grayscale/Purple charts */
+  --chart-1: oklch(0.55 0.2 290); /* Purple */
+  --chart-2: oklch(0.70 0.18 150); /* Green */
+  --chart-3: oklch(0.65 0.15 250); /* Blue */
+  --chart-4: oklch(0.45 0.15 290);
+  --chart-5: oklch(0.30 0.10 290);
 
-  /* Sidebar */
-  --sidebar: oklch(0.10 0 0); /* Deepest black for sidebar */
-  --sidebar-foreground: oklch(0.70 0.04 255); /* Soft blue-gray for non-active links */
-  --sidebar-primary: oklch(0.70 0.12 255);
-  --sidebar-primary-foreground: oklch(0.12 0 0);
-  --sidebar-accent: oklch(0.18 0 0);
-  --sidebar-accent-foreground: oklch(0.92 0.02 255);
-  --sidebar-border: oklch(0.20 0 0);
-  --sidebar-ring: oklch(0.70 0.12 255);
+  /* Sidebar styling explicitly matched to the image */
+  --sidebar: oklch(0.10 0.02 290); /* Even darker background for sidebar */
+  --sidebar-foreground: oklch(0.75 0 0); /* Muted white for unselected text */
+  --sidebar-primary: oklch(0.20 0.05 290);
+  --sidebar-primary-foreground: oklch(0.95 0 0);
+  --sidebar-accent: oklch(0.18 0.08 290); /* Dark purple highlight on hover/active */
+  --sidebar-accent-foreground: oklch(0.95 0 0);
+  --sidebar-border: oklch(0.15 0.05 290);
+  --sidebar-ring: oklch(0.55 0.2 290);
 
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 }
 
 @layer base {
@@ -128,7 +128,7 @@
   }
 }
 
-/* Custom scrollbar for the terminal feel */
+/* Custom scrollbar */
 @layer base {
   ::-webkit-scrollbar {
     width: 6px;
@@ -138,44 +138,44 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.3 0.005 270);
+    background: oklch(0.3 0.05 290);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.4 0.005 270);
+    background: oklch(0.4 0.1 290);
   }
 }
 
-/* Glow effect utilities */
+/* Glow effect utilities - Updated for new theme */
 .glow-profit {
-  box-shadow: 0 0 20px #10b98120, 0 0 40px #10b98110;
+  box-shadow: 0 0 20px #22c55e20, 0 0 40px #22c55e10;
 }
 .glow-loss {
-  box-shadow: 0 0 20px #ef444420, 0 0 40px #ef444410;
+  box-shadow: 0 0 20px #a855f720, 0 0 40px #a855f710;
 }
 .glow-primary {
-  box-shadow: 0 0 20px oklch(0.70 0.12 255 / 20%), 0 0 40px oklch(0.70 0.12 255 / 10%);
+  box-shadow: 0 0 20px oklch(0.55 0.2 290 / 20%), 0 0 40px oklch(0.55 0.2 290 / 10%);
 }
 
 .text-glow-profit {
-  text-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+  text-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
 }
 .text-glow-loss {
-  text-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+  text-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
 }
 
-/* Glass effect */
+/* Glass effect - Updated for darker STCK CLUB feel */
 .glass {
-  background: oklch(0.12 0 0 / 80%);
-  backdrop-filter: blur(12px);
-  border: 1px solid oklch(1 0 0 / 5%);
+  background: oklch(0.14 0.05 290 / 60%);
+  backdrop-filter: blur(16px);
+  border: 1px solid oklch(1 1 1 / 5%);
 }
 
-/* Grid background pattern */
+/* Grid background pattern - updated for purple */
 .grid-pattern {
   background-image:
-    linear-gradient(oklch(1 0 0 / 2%) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(1 0 0 / 2%) 1px, transparent 1px);
+    linear-gradient(oklch(0.55 0.2 290 / 3%) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.55 0.2 290 / 3%) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
@@ -183,6 +183,7 @@
 .stat-card {
   position: relative;
   overflow: hidden;
+  border: 1px solid oklch(0.25 0.05 290);
 }
 .stat-card::before {
   content: '';
@@ -190,7 +191,7 @@
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, oklch(1 0 0 / 8%), transparent 50%);
+  background: linear-gradient(135deg, oklch(0.55 0.2 290 / 20%), transparent 60%);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
   pointer-events: none;
