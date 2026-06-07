@@ -19,11 +19,11 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useDroppable } from '@dnd-kit/core';
-import { moveAccount, deleteAccount } from '@/lib/actions/accounts';
+import { moveAccount, deleteAccount, createAccount } from '@/lib/actions/accounts';
 import { CreateAccountDialog } from './create-account-dialog';
 import { EditAccountDialog } from './edit-account-dialog';
 import { Button } from '@/components/ui/button';
-import { Plus, MoreHorizontal, Edit2, Trash2 } from 'lucide-react';
+import { Plus, MoreHorizontal, Edit2, Trash2, Copy } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -139,6 +139,22 @@ export function KanbanBoard({ initialAccounts }: KanbanBoardProps) {
     setDeleteAccountState(null);
   }
 
+  async function handleDuplicate(account: Account) {
+    const result = await createAccount({
+      provider_name: `${account.provider_name} (Copy)`,
+      nickname: account.nickname ? `${account.nickname} (Copy)` : undefined,
+      account_size: account.account_size,
+      challenge_fee: account.challenge_fee,
+      phase: account.phase,
+    });
+    if (result.ok) {
+      if (result.data) setAccounts((prev) => [...prev, result.data]);
+      toast.success('Account duplicated successfully');
+    } else {
+      toast.error('Failed to duplicate account: ' + result.error);
+    }
+  }
+
   return (
     <>
       <div className="mb-4">
@@ -167,6 +183,7 @@ export function KanbanBoard({ initialAccounts }: KanbanBoardProps) {
                 accounts={phaseAccounts}
                 onEdit={setEditAccount}
                 onDelete={setDeleteAccountState}
+                onDuplicate={handleDuplicate}
               />
             );
           })}
@@ -218,11 +235,13 @@ function KanbanColumn({
   accounts,
   onEdit,
   onDelete,
+  onDuplicate,
 }: {
   phase: { key: AccountPhase; label: string; color: string };
   accounts: Account[];
   onEdit: (account: Account) => void;
   onDelete: (account: Account) => void;
+  onDuplicate: (account: Account) => void;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: phase.key });
 
@@ -261,6 +280,7 @@ function KanbanColumn({
               account={account}
               onEdit={() => onEdit(account)}
               onDelete={() => onDelete(account)}
+              onDuplicate={() => onDuplicate(account)}
             />
           ))}
         </div>
@@ -273,10 +293,12 @@ function SortableAccountCard({
   account,
   onEdit,
   onDelete,
+  onDuplicate,
 }: {
   account: Account;
   onEdit?: () => void;
   onDelete?: () => void;
+  onDuplicate?: () => void;
 }) {
   const {
     attributes,
@@ -294,7 +316,7 @@ function SortableAccountCard({
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <AccountCard account={account} isDragging={isDragging} onEdit={onEdit} onDelete={onDelete} />
+      <AccountCard account={account} isDragging={isDragging} onEdit={onEdit} onDelete={onDelete} onDuplicate={onDuplicate} />
     </div>
   );
 }
@@ -305,12 +327,14 @@ function AccountCard({
   isDragOverlay = false,
   onEdit,
   onDelete,
+  onDuplicate,
 }: {
   account: Account;
   isDragging?: boolean;
   isDragOverlay?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
+  onDuplicate?: () => void;
 }) {
   return (
     <div
@@ -339,6 +363,12 @@ function AccountCard({
                   <Edit2 className="w-4 h-4" />
                   Edit
                 </DropdownMenuItem>
+                {onDuplicate && (
+                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDuplicate(); }} className="gap-2">
+                    <Copy className="w-4 h-4" />
+                    Duplicate
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator className="bg-border/50" />
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDelete(); }} className="gap-2 text-destructive focus:bg-destructive/10 focus:text-destructive">
                   <Trash2 className="w-4 h-4" />
