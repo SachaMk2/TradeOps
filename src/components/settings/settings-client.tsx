@@ -3,21 +3,42 @@
 import { useState } from 'react';
 import { type TradingSession } from '@/lib/supabase/types';
 import { createSession, updateSession, deleteSession } from '@/lib/actions/sessions';
+import { updateProfile } from '@/lib/actions/profile';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Clock, Plus, Pencil, Trash2, Check, X } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Clock, Plus, Pencil, Trash2, Check, X, User, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface SettingsClientProps {
   initialSessions: TradingSession[];
+  initialFullName: string;
 }
 
-export function SettingsClient({ initialSessions }: SettingsClientProps) {
+export function SettingsClient({ initialSessions, initialFullName }: SettingsClientProps) {
   const [sessions, setSessions] = useState(initialSessions);
   const [newName, setNewName] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [isAdding, setIsAdding] = useState(false);
+
+  // Profile State
+  const [fullName, setFullName] = useState(initialFullName);
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+
+  async function handleProfileUpdate(e: React.FormEvent) {
+    e.preventDefault();
+    if (!fullName.trim()) return;
+    setIsUpdatingProfile(true);
+    const result = await updateProfile(fullName.trim());
+    if (result.ok) {
+      toast.success('Profil mis à jour');
+    } else {
+      toast.error(result.error);
+    }
+    setIsUpdatingProfile(false);
+  }
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
@@ -56,8 +77,42 @@ export function SettingsClient({ initialSessions }: SettingsClientProps) {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Sessions Section */}
+    <Tabs defaultValue="profile" className="space-y-6">
+      <TabsList className="bg-background/50 border border-border/50">
+        <TabsTrigger value="profile" className="gap-2"><User className="w-4 h-4" /> Profil</TabsTrigger>
+        <TabsTrigger value="sessions" className="gap-2"><Clock className="w-4 h-4" /> Sessions</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="profile" className="space-y-6">
+        <div className="glass rounded-xl p-6 space-y-4">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+              <User className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold">Informations du Profil</h2>
+              <p className="text-xs text-muted-foreground">Modifier votre nom d'affichage</p>
+            </div>
+          </div>
+          <form onSubmit={handleProfileUpdate} className="space-y-4 max-w-sm">
+            <div className="space-y-2">
+              <Label>Nom / Pseudo</Label>
+              <Input
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Votre nom"
+                className="bg-background/50"
+              />
+            </div>
+            <Button type="submit" disabled={isUpdatingProfile || !fullName.trim() || fullName === initialFullName}>
+              {isUpdatingProfile && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Enregistrer
+            </Button>
+          </form>
+        </div>
+      </TabsContent>
+
+      <TabsContent value="sessions" className="space-y-6">
       <div className="glass rounded-xl p-6 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -163,6 +218,7 @@ export function SettingsClient({ initialSessions }: SettingsClientProps) {
           )}
         </div>
       </div>
-    </div>
+      </TabsContent>
+    </Tabs>
   );
 }

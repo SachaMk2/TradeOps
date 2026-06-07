@@ -1,7 +1,12 @@
 import { getSessions } from '@/lib/actions/sessions';
 import { SettingsClient } from '@/components/settings/settings-client';
+import { createClient } from '@/lib/supabase/server';
 
 export default async function SettingsPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const fullName = user?.user_metadata?.full_name || '';
+
   const sessionsResult = await getSessions();
   const sessions = sessionsResult.ok && sessionsResult.data ? sessionsResult.data : [];
 
@@ -15,7 +20,7 @@ export default async function SettingsPage() {
           Customize your TradeOps workspace.
         </p>
       </div>
-      <SettingsClient initialSessions={sessions} />
+      <SettingsClient initialSessions={sessions} initialFullName={fullName} />
     </div>
   );
 }

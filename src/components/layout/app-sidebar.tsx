@@ -38,7 +38,7 @@ const navItems = [
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ userName = 'Opérateur' }: { userName?: string }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -70,7 +70,7 @@ export function AppSidebar() {
         <div className="px-4 py-6">
           <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] shadow-[0_0_15px_rgba(0,0,0,0.5)]">
             <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">Bienvenue,</p>
-            <p className="text-base font-bold text-white">Opérateur</p>
+            <p className="text-base font-bold text-white truncate" title={userName}>{userName}</p>
           </div>
         </div>
       )}
