@@ -6,15 +6,10 @@ import { type TradeWithRelations, type TradeChecklistItem } from '@/lib/supabase
 import { updateTradeChecklistItem, deleteTrade } from '@/lib/actions/trades';
 import { Button } from '@/components/ui/button';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
-import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogHeader,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -114,10 +109,10 @@ export function TradeDetailSheet({ trade, onClose }: TradeDetailSheetProps) {
 
   return (
     <>
-      <Sheet open={!!trade} onOpenChange={(open) => !open && onClose()}>
-        <SheetContent className="w-[520px] sm:max-w-[520px] glass border-l-border/50 overflow-y-auto">
-          <SheetHeader>
-          <SheetTitle className="flex items-center gap-3">
+      <Dialog open={!!trade && !selectedImage} onOpenChange={(open) => !open && onClose()}>
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] glass border-border/50 overflow-y-auto data-open:zoom-in-90 data-closed:zoom-out-90 duration-300">
+          <DialogHeader>
+          <DialogTitle className="flex items-center gap-3">
             <span className="font-bold text-lg">{trade.instrument}</span>
             {trade.direction === 'long' ? (
               <Badge className="bg-profit/20 text-profit border-profit/30">
@@ -131,8 +126,8 @@ export function TradeDetailSheet({ trade, onClose }: TradeDetailSheetProps) {
             <Badge variant="outline" className="capitalize">
               {trade.status}
             </Badge>
-          </SheetTitle>
-        </SheetHeader>
+          </DialogTitle>
+        </DialogHeader>
 
         <div className="space-y-5 mt-6">
           {/* P&L Hero */}
@@ -281,8 +276,8 @@ export function TradeDetailSheet({ trade, onClose }: TradeDetailSheetProps) {
             </div>
           )}
         </div>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
 
     <Dialog open={!!selectedImage} onOpenChange={(open) => !open && setSelectedImage(null)}>
       <DialogContent className="max-w-6xl w-[90vw] p-0 border-none bg-transparent shadow-none">
