@@ -25,6 +25,13 @@ interface DayStats {
   losses: number;
 }
 
+interface CalendarDay {
+  isPadding: boolean;
+  dateKey?: string;
+  dayNum?: number;
+  stat?: DayStats | null;
+}
+
 function toLocalDateKey(trade: TradeWithRelations): string {
   const d = new Date(trade.entry_time || trade.created_at);
   const year = d.getFullYear();
@@ -96,15 +103,20 @@ export function CalendarClient({ trades }: CalendarClientProps) {
 
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    const days: (DayStats | null)[] = [];
-    for (let i = 0; i < startOffset; i++) days.push(null);
+    const days: CalendarDay[] = [];
+    for (let i = 0; i < startOffset; i++) days.push({ isPadding: true });
     for (let d = 1; d <= daysInMonth; d++) {
       const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-      days.push(dayStats.get(key) ?? null);
+      days.push({
+        isPadding: false,
+        dateKey: key,
+        dayNum: d,
+        stat: dayStats.get(key) ?? null,
+      });
     }
 
     // Pad to full weeks
-    while (days.length % 7 !== 0) days.push(null);
+    while (days.length % 7 !== 0) days.push({ isPadding: true });
 
     // Month aggregate stats
     let totalRR = 0, wins = 0, losses = 0, tradeCount = 0;
@@ -213,24 +225,15 @@ export function CalendarClient({ trades }: CalendarClientProps) {
 
         {/* Calendar Grid */}
         <div className="grid grid-cols-7 gap-1.5">
-          {days.map((stat, i) => {
-            const dayNum = i - (days.findIndex(d => d !== null && (d?.date || '') !== '') >= 0
-              ? days.findIndex(d => d !== null)
-              : 0) + 1;
-
-            // Calculate actual date number
-            const firstNonNull = days.findIndex(d => d !== null);
-            const actualDayNum = i >= firstNonNull ? (i - firstNonNull + 1) : null;
-            const isToday = stat?.date === todayKey || (!stat && actualDayNum !== null && `${year}-${String(month + 1).padStart(2, '0')}-${String(actualDayNum).padStart(2, '0')}` === todayKey);
-
-            if (stat === null && actualDayNum === null) {
-              // Padding before month starts
+          {days.map((dayObj, i) => {
+            if (dayObj.isPadding) {
               return <div key={`pad-${i}`} className="aspect-square" />;
             }
 
-            const dateNum = actualDayNum;
-            const bgClass = getDayBg(stat);
+            const { stat, dayNum, dateKey } = dayObj;
+            const isToday = dateKey === todayKey;
             const isEmpty = !stat || stat.tradeCount === 0;
+            const bgClass = getDayBg(stat || null);
 
             return (
               <button
@@ -249,7 +252,7 @@ export function CalendarClient({ trades }: CalendarClientProps) {
                   text-[10px] font-semibold leading-none
                   ${isToday ? 'text-primary' : isEmpty ? 'text-muted-foreground/40' : 'text-muted-foreground'}
                 `}>
-                  {dateNum}
+                  {dayNum}
                 </span>
 
                 {stat && stat.tradeCount > 0 && (
