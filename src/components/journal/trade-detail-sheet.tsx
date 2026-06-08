@@ -11,6 +11,11 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
@@ -44,6 +49,7 @@ export function TradeDetailSheet({ trade, onClose }: TradeDetailSheetProps) {
   const [checklistItems, setChecklistItems] = useState<TradeChecklistItem[]>([]);
   const [adherence, setAdherence] = useState(0);
   const [deleting, setDeleting] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   // Sync when trade changes
   const tradeId = trade?.id;
@@ -107,9 +113,10 @@ export function TradeDetailSheet({ trade, onClose }: TradeDetailSheetProps) {
   const pnlR = trade.pnl_r ? Number(trade.pnl_r) : null;
 
   return (
-    <Sheet open={!!trade} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="w-[520px] sm:max-w-[520px] bg-card border-border/50 overflow-y-auto">
-        <SheetHeader>
+    <>
+      <Sheet open={!!trade} onOpenChange={(open) => !open && onClose()}>
+        <SheetContent className="w-[520px] sm:max-w-[520px] glass border-l-border/50 overflow-y-auto">
+          <SheetHeader>
           <SheetTitle className="flex items-center gap-3">
             <span className="font-bold text-lg">{trade.instrument}</span>
             {trade.direction === 'long' ? (
@@ -259,8 +266,15 @@ export function TradeDetailSheet({ trade, onClose }: TradeDetailSheetProps) {
               </h4>
               <div className="grid grid-cols-2 gap-3">
                 {trade.screenshot_urls.map((url, idx) => (
-                  <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-border/50 bg-muted/20">
-                    <img src={url} alt={`Screenshot ${idx + 1}`} className="object-cover w-full h-full" />
+                  <div
+                    key={idx}
+                    className="relative aspect-video rounded-lg overflow-hidden border border-border/50 bg-muted/20 interactive-card group"
+                    onClick={() => setSelectedImage(url)}
+                  >
+                    <img src={url} alt={`Screenshot ${idx + 1}`} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="text-white text-xs font-medium">Click to enlarge</span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -269,6 +283,18 @@ export function TradeDetailSheet({ trade, onClose }: TradeDetailSheetProps) {
         </div>
       </SheetContent>
     </Sheet>
+
+    <Dialog open={!!selectedImage} onOpenChange={(open) => !open && setSelectedImage(null)}>
+      <DialogContent className="max-w-6xl w-[90vw] p-0 border-none bg-transparent shadow-none">
+        <DialogTitle className="sr-only">Enlarged Trade Screenshot</DialogTitle>
+        {selectedImage && (
+          <div className="relative w-full h-auto max-h-[90vh] rounded-lg overflow-hidden flex items-center justify-center bg-black/50 glass">
+            <img src={selectedImage} alt="Enlarged screenshot" className="object-contain w-full h-full max-h-[90vh]" />
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
 
@@ -282,10 +308,10 @@ function DetailItem({
   value: string;
 }) {
   return (
-    <div className="bg-background/30 rounded-lg p-2.5">
-      <div className="flex items-center gap-1.5 mb-0.5">
-        <Icon className="w-3 h-3 text-muted-foreground" />
-        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{label}</span>
+    <div className="glass interactive-card bg-background/30 rounded-lg p-3">
+      <div className="flex items-center gap-1.5 mb-1">
+        <Icon className="w-3.5 h-3.5 text-primary" />
+        <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">{label}</span>
       </div>
       <p className="text-sm font-medium">{value}</p>
     </div>
