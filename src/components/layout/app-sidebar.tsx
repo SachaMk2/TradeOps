@@ -16,6 +16,7 @@ import {
   Settings,
   Wallet,
   CalendarDays,
+  Brain,
 } from 'lucide-react';
 import { useState } from 'react';
 import { signOut } from '@/lib/actions/auth';
@@ -30,6 +31,7 @@ const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/journal', label: 'Journal', icon: BookOpen },
   { href: '/calendar', label: 'Calendar', icon: CalendarDays },
+  { href: '/mind-dump', label: 'Mind Dump', icon: Brain },
   { href: '/trades/new', label: 'New Trade', icon: PenLine },
   { href: '/setups', label: 'Setups', icon: TrendingUp },
   { href: '/accounts', label: 'Accounts', icon: Wallet },

@@ -127,6 +127,14 @@ export interface Goal {
   completed_at: string | null;
 }
 
+export interface MindDump {
+  id: string;
+  user_id: string;
+  dump_date: string;
+  content: string;
+  created_at: string;
+}
+
 // ---- Insert Types ----
 
 export type AccountInsert = Omit<Account, 'id' | 'created_at' | 'updated_at'>;
@@ -136,6 +144,7 @@ export type TradeInsert = Omit<Trade, 'id' | 'created_at'>;
 export type TradeChecklistItemInsert = Omit<TradeChecklistItem, 'id'>;
 export type PayoutInsert = Omit<Payout, 'id' | 'created_at'>;
 export type GoalInsert = Omit<Goal, 'id' | 'created_at' | 'completed_at'>;
+export type MindDumpInsert = Omit<MindDump, 'id' | 'created_at'>;
 
 // ---- Update Types ----
 

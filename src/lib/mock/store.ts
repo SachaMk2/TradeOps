@@ -2,7 +2,7 @@
 // Mock in-memory data store for dev bypass mode
 // ============================================================
 
-import { type Account, type Setup, type ChecklistItem, type Trade, type TradeChecklistItem, type Payout, type Goal, type GoalStatus, type SetupWithChecklist, type TradeWithRelations, type TradingSession, type TradeExecution } from '@/lib/supabase/types';
+import { type Account, type Setup, type ChecklistItem, type Trade, type TradeChecklistItem, type Payout, type Goal, type GoalStatus, type SetupWithChecklist, type TradeWithRelations, type TradingSession, type TradeExecution, type MindDump } from '@/lib/supabase/types';
 import { v4, setupIds, sessionIds, tradeIds } from './uuid';
 
 let tradeExecutions: TradeExecution[] = [];
@@ -158,6 +158,14 @@ let goals: Goal[] = [
     target_date: new Date(Date.now() + 30 * 86400000).toISOString(),
     created_at: new Date().toISOString(), completed_at: null,
   },
+];
+
+let mindDumps: MindDump[] = [
+  {
+    id: uuid(), user_id: MOCK_USER_ID, dump_date: new Date().toISOString().slice(0, 10),
+    content: 'Feeling focused today. The market structure shifted on H1. Need to be patient and wait for pullbacks. No chasing breakouts.',
+    created_at: new Date().toISOString(),
+  }
 ];
 
 // ---- EXPORTS ----
@@ -421,5 +429,19 @@ export const mockStore = {
   },
   deleteSession: (id: string) => {
     sessions = sessions.filter(s => s.id !== id);
+  },
+
+  // MIND DUMPS
+  getMindDumps: () => [...mindDumps].sort((a, b) => new Date(b.dump_date).getTime() - new Date(a.dump_date).getTime()),
+  createMindDump: (input: { dump_date: string; content: string }) => {
+    const md: MindDump = {
+      id: uuid(), user_id: MOCK_USER_ID, dump_date: input.dump_date,
+      content: input.content, created_at: new Date().toISOString(),
+    };
+    mindDumps.push(md);
+    return md;
+  },
+  deleteMindDump: (id: string) => {
+    mindDumps = mindDumps.filter((m) => m.id !== id);
   },
 };
