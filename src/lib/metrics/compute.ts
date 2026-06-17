@@ -14,7 +14,7 @@ export function netPnl(trades: TradeWithRelations[]): number {
 export function winRate(trades: TradeWithRelations[]): number {
   const closed = trades.filter((t) => t.status === 'closed');
   if (closed.length === 0) return 0;
-  const wins = closed.filter((t) => Number(t.pnl_currency) > 0).length;
+  const wins = closed.filter((t) => Number(t.pnl_currency) >= 0).length;
   return (wins / closed.length) * 100;
 }
 
@@ -44,8 +44,8 @@ export function expectancyR(trades: TradeWithRelations[]): number {
   if (closed.length === 0) return 0;
 
   const wr = winRate(closed) / 100;
-  const wins = closed.filter((t) => Number(t.pnl_r) > 0);
-  const losses = closed.filter((t) => Number(t.pnl_r) <= 0);
+  const wins = closed.filter((t) => Number(t.pnl_r) >= 0);
+  const losses = closed.filter((t) => Number(t.pnl_r) < 0);
 
   const avgWin = wins.length > 0
     ? wins.reduce((s, t) => s + Number(t.pnl_r), 0) / wins.length
@@ -83,11 +83,11 @@ export function currentStreak(trades: TradeWithRelations[]): { type: 'win' | 'lo
 
   if (sorted.length === 0) return { type: 'none', count: 0 };
 
-  const firstIsWin = Number(sorted[0].pnl_currency) > 0;
+  const firstIsWin = Number(sorted[0].pnl_currency) >= 0;
   let count = 0;
 
   for (const t of sorted) {
-    const isWin = Number(t.pnl_currency) > 0;
+    const isWin = Number(t.pnl_currency) >= 0;
     if (isWin === firstIsWin) count++;
     else break;
   }
