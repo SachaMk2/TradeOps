@@ -23,8 +23,8 @@ export function AppMobileNav() {
 
   return (
     <div className="md:hidden fixed bottom-0 left-0 w-full z-50">
-      {/* Glassmorphism background with blur */}
-      <div className="absolute inset-0 bg-sidebar/80 backdrop-blur-xl border-t border-sidebar-border shadow-[0_-10px_40px_rgba(0,0,0,0.5)]"></div>
+      {/* Glassmorphism background with optimized blur for mobile performance */}
+      <div className="absolute inset-0 bg-sidebar/95 backdrop-blur-md border-t border-sidebar-border shadow-[0_-10px_40px_rgba(0,0,0,0.5)]"></div>
       
       {/* Safe area padding for iPhones */}
       <div className="relative flex items-center justify-around pb-safe">
