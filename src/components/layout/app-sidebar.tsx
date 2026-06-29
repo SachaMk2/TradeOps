@@ -2,61 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  LayoutDashboard,
-  BookOpen,
-  Kanban,
-  PenLine,
-  TrendingUp,
-  LogOut,
-  ChevronLeft,
-  ChevronRight,
-  DollarSign,
-  Target,
-  Settings,
-  Wallet,
-  CalendarDays,
-  Brain,
-  Globe,
-} from 'lucide-react';
 import { useState } from 'react';
 import { signOut } from '@/lib/actions/auth';
 import { Button } from '@/components/ui/button';
+import { navGroups } from '@/config/navigation';
+import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
 
 
-const navGroups = [
-  {
-    title: 'Main',
-    items: [
-      { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { href: '/journal', label: 'Journal', icon: BookOpen },
-      { href: '/calendar', label: 'Calendar', icon: CalendarDays },
-    ]
-  },
-  {
-    title: 'Trading',
-    items: [
-      { href: '/trades/new', label: 'New Trade', icon: PenLine },
-      { href: '/setups', label: 'Setups', icon: TrendingUp },
-      { href: '/news', label: 'News', icon: Globe },
-      { href: '/mind-dump', label: 'Mind Dump', icon: Brain },
-    ]
-  },
-  {
-    title: 'Performance',
-    items: [
-      { href: '/accounts', label: 'Accounts', icon: Wallet },
-      { href: '/goals', label: 'Goals', icon: Target },
-      { href: '/payouts', label: 'Payouts', icon: DollarSign },
-    ]
-  },
-  {
-    title: 'System',
-    items: [
-      { href: '/settings', label: 'Settings', icon: Settings },
-    ]
-  }
-];
+
 
 export function AppSidebar({ userName = 'Opérateur' }: { userName?: string }) {
   const pathname = usePathname();
@@ -163,20 +116,10 @@ export function AppSidebar({ userName = 'Opérateur' }: { userName?: string }) {
         <button
           onClick={() => setCollapsed(!collapsed)}
           className={`
-            flex items-center gap-3 rounded-lg px-3 py-2 text-sm w-full
-            text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent/50
-            transition-all duration-200
-            ${collapsed ? 'justify-center px-0' : ''}
+            w-full flex items-center justify-center p-2 rounded-xl text-sidebar-foreground/50 hover:text-white hover:bg-sidebar-accent/50 transition-colors
           `}
         >
-          {collapsed ? (
-            <ChevronRight className="w-4 h-4" />
-          ) : (
-            <>
-              <ChevronLeft className="w-4 h-4" />
-              <span>Collapse</span>
-            </>
-          )}
+          {collapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
         </button>
 
         {/* Sign out */}
@@ -186,12 +129,12 @@ export function AppSidebar({ userName = 'Opérateur' }: { userName?: string }) {
             size="sm"
             type="submit"
             className={`
-              w-full text-sidebar-foreground/50 hover:text-destructive hover:bg-destructive/10
-              ${collapsed ? 'px-0 justify-center' : 'justify-start gap-3'}
+              flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-red-500 hover:bg-red-500/10 transition-colors w-full
+              ${collapsed ? 'justify-center px-0' : ''}
             `}
           >
-            <LogOut className="w-4 h-4" />
-            {!collapsed && <span>Sign Out</span>}
+            <LogOut className="w-5 h-5 shrink-0" />
+            {!collapsed && <span>Log Out</span>}
           </Button>
         </form>
       </div>
