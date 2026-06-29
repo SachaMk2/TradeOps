@@ -26,7 +26,7 @@ export default async function AppLayout({
       <AppSidebar userName={fullName} />
       <AppMobileNav />
       {needsOnboarding && <OnboardingFlow />}
-      <main className="flex-1 ml-0 md:ml-56 transition-[margin] duration-300 flex flex-col items-center pb-24 md:pb-0 max-w-[100vw] overflow-x-hidden">
+      <main className="flex-1 ml-0 md:ml-[var(--sidebar-width,14rem)] transition-[margin] duration-300 flex flex-col items-center pb-24 md:pb-0 max-w-[100vw] overflow-x-hidden">
         <div className="p-4 md:p-10 w-full max-w-7xl">
           {children}
         </div>

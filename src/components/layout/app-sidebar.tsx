@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signOut } from '@/lib/actions/auth';
 import { Button } from '@/components/ui/button';
 import { navGroups } from '@/config/navigation';
@@ -14,6 +14,11 @@ import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
 export function AppSidebar({ userName = 'Opérateur' }: { userName?: string }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+
+  // Sync sidebar width to CSS variable for the main layout to re-center dynamically
+  useEffect(() => {
+    document.documentElement.style.setProperty('--sidebar-width', collapsed ? '4rem' : '14rem');
+  }, [collapsed]);
 
   return (
     <aside
