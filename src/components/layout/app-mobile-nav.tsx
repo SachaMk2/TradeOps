@@ -68,13 +68,11 @@ export function AppMobileNav() {
 
         {/* Menu Hamburger */}
         <Sheet>
-          <SheetTrigger>
-            <button className="flex flex-col items-center justify-center w-full py-3 gap-1 transition-colors duration-200 text-sidebar-foreground/60 hover:text-white">
-              <div className="p-1.5 rounded-xl bg-transparent">
-                <Menu className="w-5 h-5 shrink-0" strokeWidth={2} />
-              </div>
-              <span className="text-[10px] font-medium">Menu</span>
-            </button>
+          <SheetTrigger className="flex flex-col items-center justify-center w-full py-3 gap-1 transition-colors duration-200 text-sidebar-foreground/60 hover:text-white">
+            <div className="p-1.5 rounded-xl bg-transparent">
+              <Menu className="w-5 h-5 shrink-0" strokeWidth={2} />
+            </div>
+            <span className="text-[10px] font-medium">Menu</span>
           </SheetTrigger>
           <SheetContent side="right" className="bg-sidebar border-l border-sidebar-border w-[280px] p-0 flex flex-col">
             <SheetHeader className="p-6 border-b border-sidebar-border/50">
