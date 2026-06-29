@@ -22,24 +22,40 @@ import {
 import { useState } from 'react';
 import { signOut } from '@/lib/actions/auth';
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 
-const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/journal', label: 'Journal', icon: BookOpen },
-  { href: '/calendar', label: 'Calendar', icon: CalendarDays },
-  { href: '/news', label: 'News', icon: Globe },
-  { href: '/mind-dump', label: 'Mind Dump', icon: Brain },
-  { href: '/trades/new', label: 'New Trade', icon: PenLine },
-  { href: '/setups', label: 'Setups', icon: TrendingUp },
-  { href: '/accounts', label: 'Accounts', icon: Wallet },
-  { href: '/goals', label: 'Goals', icon: Target },
-  { href: '/payouts', label: 'Payouts', icon: DollarSign },
-  { href: '/settings', label: 'Settings', icon: Settings },
+
+const navGroups = [
+  {
+    title: 'Main',
+    items: [
+      { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { href: '/journal', label: 'Journal', icon: BookOpen },
+      { href: '/calendar', label: 'Calendar', icon: CalendarDays },
+    ]
+  },
+  {
+    title: 'Trading',
+    items: [
+      { href: '/trades/new', label: 'New Trade', icon: PenLine },
+      { href: '/setups', label: 'Setups', icon: TrendingUp },
+      { href: '/news', label: 'News', icon: Globe },
+      { href: '/mind-dump', label: 'Mind Dump', icon: Brain },
+    ]
+  },
+  {
+    title: 'Performance',
+    items: [
+      { href: '/accounts', label: 'Accounts', icon: Wallet },
+      { href: '/goals', label: 'Goals', icon: Target },
+      { href: '/payouts', label: 'Payouts', icon: DollarSign },
+    ]
+  },
+  {
+    title: 'System',
+    items: [
+      { href: '/settings', label: 'Settings', icon: Settings },
+    ]
+  }
 ];
 
 export function AppSidebar({ userName = 'Opérateur' }: { userName?: string }) {
@@ -80,56 +96,65 @@ export function AppSidebar({ userName = 'Opérateur' }: { userName?: string }) {
       )}
 
       {/* Navigation */}
-      <nav className="flex-1 py-4 px-2 space-y-1">
-        {navItems.map((item) => {
-          const isActive =
-            item.href === '/dashboard'
-              ? pathname === '/dashboard'
-              : pathname.startsWith(item.href);
+      <nav className="flex-1 py-4 px-2 space-y-4 overflow-y-auto overflow-x-hidden">
+        {navGroups.map((group, groupIdx) => (
+          <div key={group.title} className="space-y-1">
+            {!collapsed && (
+              <h4 className="px-4 text-[10px] font-black text-white/40 uppercase tracking-wider mb-2">
+                {group.title}
+              </h4>
+            )}
+            {group.items.map((item) => {
+              const isActive =
+                item.href === '/dashboard'
+                  ? pathname === '/dashboard'
+                  : pathname.startsWith(item.href);
 
-          const linkContent = (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`
-                flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold
-                transition-all duration-300
-                ${collapsed ? 'justify-center px-0' : ''}
-                ${
-                  isActive
-                    ? 'bg-sidebar-accent border border-primary/20 text-white shadow-[0_0_20px_rgba(109,40,217,0.15)]'
-                    : 'text-sidebar-foreground/70 hover:text-white border border-transparent'
-                }
-              `}
-            >
-              <item.icon className={`w-5 h-5 shrink-0 transition-colors ${isActive ? 'text-primary' : ''}`} />
-              {!collapsed && <span>{item.label}</span>}
-            </Link>
-          );
+              const linkContent = (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`
+                    flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold
+                    transition-all duration-300
+                    ${collapsed ? 'justify-center px-0' : ''}
+                    ${
+                      isActive
+                        ? 'bg-sidebar-accent border border-primary/20 text-white shadow-[0_0_20px_rgba(109,40,217,0.15)]'
+                        : 'text-sidebar-foreground/70 hover:text-white border border-transparent'
+                    }
+                  `}
+                >
+                  <item.icon className={`w-4.5 h-4.5 shrink-0 transition-colors ${isActive ? 'text-primary' : ''}`} />
+                  {!collapsed && <span>{item.label}</span>}
+                </Link>
+              );
 
-          if (collapsed) {
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                title={item.label}
-                className={`
-                  flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium
-                  transition-all duration-200 justify-center px-0
-                  ${
-                    isActive
-                      ? 'bg-sidebar-accent text-sidebar-primary shadow-sm'
-                      : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground'
-                  }
-                `}
-              >
-                <item.icon className="w-4.5 h-4.5 shrink-0" />
-              </Link>
-            );
-          }
+              if (collapsed) {
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    title={item.label}
+                    className={`
+                      flex items-center gap-3 rounded-lg py-2.5 text-sm font-medium
+                      transition-all duration-200 justify-center px-0 mx-1 mb-1
+                      ${
+                        isActive
+                          ? 'bg-sidebar-accent border border-primary/20 text-primary shadow-[0_0_15px_rgba(109,40,217,0.15)]'
+                          : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-white border border-transparent'
+                      }
+                    `}
+                  >
+                    <item.icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-primary' : ''}`} />
+                  </Link>
+                );
+              }
 
-          return linkContent;
-        })}
+              return linkContent;
+            })}
+          </div>
+        ))}
       </nav>
 
       {/* Footer */}
