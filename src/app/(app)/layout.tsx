@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { AppSidebar } from '@/components/layout/app-sidebar';
+import { AppMobileNav } from '@/components/layout/app-mobile-nav';
 import { isDevBypass } from '@/lib/mock/bypass';
 import { OnboardingFlow } from '@/components/onboarding/onboarding-flow';
 
@@ -21,11 +22,12 @@ export default async function AppLayout({
   const fullName = userMeta.full_name || 'Opérateur';
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen relative">
       <AppSidebar userName={fullName} />
+      <AppMobileNav />
       {needsOnboarding && <OnboardingFlow />}
-      <main className="flex-1 ml-56 transition-all duration-300 flex flex-col items-center">
-        <div className="p-6 md:p-10 w-full max-w-7xl">
+      <main className="flex-1 ml-0 md:ml-56 transition-all duration-300 flex flex-col items-center pb-24 md:pb-0">
+        <div className="p-4 md:p-10 w-full max-w-7xl overflow-x-hidden">
           {children}
         </div>
       </main>

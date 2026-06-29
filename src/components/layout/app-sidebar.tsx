@@ -65,8 +65,8 @@ export function AppSidebar({ userName = 'Opérateur' }: { userName?: string }) {
   return (
     <aside
       className={`
-        fixed left-0 top-0 z-40 h-screen border-r border-sidebar-border bg-sidebar
-        flex flex-col transition-all duration-300 ease-in-out
+        hidden md:flex fixed left-0 top-0 z-40 h-screen border-r border-sidebar-border bg-sidebar
+        flex-col transition-all duration-300 ease-in-out
         ${collapsed ? 'w-16' : 'w-56'}
       `}
     >

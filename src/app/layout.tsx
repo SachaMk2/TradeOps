@@ -12,6 +12,19 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "TradeOps — Trading Command Center",
   description: "Complete operational control over your prop trading business.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "TradeOps",
+  },
+};
+
+export const viewport = {
+  themeColor: "#09090b",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({

@@ -191,7 +191,8 @@ export function PayoutsClient({
             <p>No payouts logged yet.</p>
           </div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="border-b border-border/50 bg-muted/20">
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Date</th>
@@ -239,7 +240,8 @@ export function PayoutsClient({
                 );
               })}
             </tbody>
-          </table>
+            </table>
+          </div>
         )}
       </div>
     </div>
