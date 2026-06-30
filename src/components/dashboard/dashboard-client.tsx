@@ -88,7 +88,8 @@ export function DashboardClient({ trades, accounts, payouts, setups, sessions }:
     return trades.filter((t) => {
       const matchAccount = filterAccount === 'all' || (t.trade_executions && t.trade_executions.some(e => e.account_id === filterAccount));
       const matchSetup = filterSetup === 'all' || t.setup_id === filterSetup;
-      const matchDate = !cutoff || isAfter(parseISO(t.created_at), cutoff);
+      const tradeDate = parseISO(t.entry_time || t.created_at);
+      const matchDate = !cutoff || isAfter(tradeDate, cutoff) || tradeDate.getTime() === cutoff.getTime();
       return matchAccount && matchSetup && matchDate;
     }).map(t => {
       // Calculate dynamic PnL based on filter

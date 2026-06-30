@@ -68,7 +68,12 @@ function computeDayStats(trades: TradeWithRelations[]): Map<string, DayStats> {
       day.totalRR += pnlR;
     }
 
-    const pnlCurrency = Number(trade.pnl_currency);
+    // Calculate PnL by summing executions to perfectly match the Dashboard logic
+    let pnlCurrency = Number(trade.pnl_currency);
+    if (trade.trade_executions && trade.trade_executions.length > 0) {
+      pnlCurrency = trade.trade_executions.reduce((sum, e) => sum + Number((e as any).pnl_currency || 0), 0);
+    }
+
     if (pnlCurrency >= 0) {
       day.wins++;
     } else {
