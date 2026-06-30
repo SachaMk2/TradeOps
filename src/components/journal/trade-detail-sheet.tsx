@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { type TradeWithRelations, type TradeChecklistItem } from '@/lib/supabase/types';
 import { updateTradeChecklistItem, deleteTrade } from '@/lib/actions/trades';
 import { Button } from '@/components/ui/button';
@@ -266,7 +267,7 @@ export function TradeDetailSheet({ trade, onClose }: TradeDetailSheetProps) {
                     className="relative aspect-video rounded-lg overflow-hidden border border-border/50 bg-muted/20 interactive-card group"
                     onClick={() => setSelectedImage(url)}
                   >
-                    <img src={url} alt={`Screenshot ${idx + 1}`} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" />
+                    <Image src={url} alt={`Screenshot ${idx + 1}`} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 50vw" />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <span className="text-white text-xs font-medium">Click to enlarge</span>
                     </div>
@@ -283,8 +284,8 @@ export function TradeDetailSheet({ trade, onClose }: TradeDetailSheetProps) {
       <DialogContent className="max-w-6xl w-[90vw] p-0 border-none bg-transparent shadow-none">
         <DialogTitle className="sr-only">Enlarged Trade Screenshot</DialogTitle>
         {selectedImage && (
-          <div className="relative w-full h-auto max-h-[90vh] rounded-lg overflow-hidden flex items-center justify-center bg-black/50 glass">
-            <img src={selectedImage} alt="Enlarged screenshot" className="object-contain w-full h-full max-h-[90vh]" />
+          <div className="relative w-full h-[80vh] max-h-[90vh] rounded-lg overflow-hidden flex items-center justify-center bg-black/50 glass">
+            <Image src={selectedImage} alt="Enlarged screenshot" fill className="object-contain" sizes="100vw" />
           </div>
         )}
       </DialogContent>

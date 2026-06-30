@@ -49,6 +49,10 @@ export function JournalClient({ initialTrades, setups, accounts }: JournalClient
   const [filterSearch, setFilterSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 50;
+
   // Sorting
   const [sortKey, setSortKey] = useState<SortKey>('created_at');
   const [sortAsc, setSortAsc] = useState(false);
@@ -92,6 +96,9 @@ export function JournalClient({ initialTrades, setups, accounts }: JournalClient
       return sortAsc ? Number(aVal) - Number(bVal) : Number(bVal) - Number(aVal);
     });
 
+    // Reset to page 1 when filters change
+    setCurrentPage(1);
+
     return filtered;
   }, [initialTrades, filterAccount, filterSetup, filterSearch, sortKey, sortAsc]);
 
@@ -105,6 +112,10 @@ export function JournalClient({ initialTrades, setups, accounts }: JournalClient
   }
 
   const hasFilters = filterAccount !== 'all' || filterSetup !== 'all' || filterSearch !== '';
+
+  // Calculate Pagination
+  const totalPages = Math.ceil(filteredTrades.length / itemsPerPage);
+  const paginatedTrades = filteredTrades.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <>
@@ -210,7 +221,7 @@ export function JournalClient({ initialTrades, setups, accounts }: JournalClient
                 </tr>
               </thead>
               <tbody>
-                {filteredTrades.map((trade) => {
+                {paginatedTrades.map((trade) => {
                   const pnl = Number((trade as any).pnl_currency);
                   const pnlR = trade.pnl_r ? Number(trade.pnl_r) : null;
                   const setup = trade.setup as (typeof setups)[number] | null;
@@ -292,6 +303,35 @@ export function JournalClient({ initialTrades, setups, accounts }: JournalClient
               </tbody>
             </table>
           </div>
+          
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between px-4 py-3 border-t border-border/50 bg-sidebar/20">
+              <div className="text-xs text-muted-foreground">
+                Showing <span className="font-medium text-foreground">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-medium text-foreground">{Math.min(currentPage * itemsPerPage, filteredTrades.length)}</span> of <span className="font-medium text-foreground">{filteredTrades.length}</span> trades
+              </div>
+              <div className="flex gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="h-8 border-border/50"
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="h-8 border-border/50"
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
