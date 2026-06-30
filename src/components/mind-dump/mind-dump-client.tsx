@@ -22,7 +22,7 @@ export function MindDumpClient({ initialDumps }: MindDumpClientProps) {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   // Form State
   const [dumpDate, setDumpDate] = useState(new Date().toISOString().slice(0, 10));
