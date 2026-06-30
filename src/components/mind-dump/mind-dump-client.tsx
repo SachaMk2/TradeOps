@@ -20,6 +20,10 @@ export function MindDumpClient({ initialDumps }: MindDumpClientProps) {
   const [loading, setLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   // Form State
   const [dumpDate, setDumpDate] = useState(new Date().toISOString().slice(0, 10));
   const [content, setContent] = useState('');
@@ -48,11 +52,21 @@ export function MindDumpClient({ initialDumps }: MindDumpClientProps) {
     if (!result.ok) {
       toast.error(result.error || 'Failed to delete mind dump');
     } else {
-      setDumps((prev) => prev.filter((d) => d.id !== id));
+      setDumps((prev) => {
+        const newDumps = prev.filter((d) => d.id !== id);
+        // Adjust pagination if deleting last item on current page
+        const newTotalPages = Math.ceil(newDumps.length / itemsPerPage);
+        if (currentPage > newTotalPages && newTotalPages > 0) setCurrentPage(newTotalPages);
+        return newDumps;
+      });
       toast.success('Mind dump deleted');
     }
     setDeletingId(null);
   }
+
+  // Calculate Pagination
+  const totalPages = Math.ceil(dumps.length / itemsPerPage);
+  const paginatedDumps = dumps.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className="grid lg:grid-cols-[350px_1fr] gap-8 items-start">
@@ -111,7 +125,7 @@ export function MindDumpClient({ initialDumps }: MindDumpClientProps) {
           </div>
         ) : (
           <div className="space-y-4">
-            {dumps.map((dump) => (
+            {paginatedDumps.map((dump) => (
               <div key={dump.id} className="glass interactive-card rounded-2xl p-6 border-border/50 group relative">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
@@ -135,6 +149,35 @@ export function MindDumpClient({ initialDumps }: MindDumpClientProps) {
                 </div>
               </div>
             ))}
+            
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between pt-4">
+                <div className="text-xs text-muted-foreground">
+                  Showing <span className="font-medium text-foreground">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-medium text-foreground">{Math.min(currentPage * itemsPerPage, dumps.length)}</span> of <span className="font-medium text-foreground">{dumps.length}</span> notes
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="h-8 border-border/50 bg-background/50"
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="h-8 border-border/50 bg-background/50"
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
