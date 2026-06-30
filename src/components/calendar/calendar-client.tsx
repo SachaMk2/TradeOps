@@ -66,8 +66,13 @@ function computeDayStats(trades: TradeWithRelations[]): Map<string, DayStats> {
     const pnlR = trade.pnl_r ? Number(trade.pnl_r) : null;
     if (pnlR !== null) {
       day.totalRR += pnlR;
-      if (pnlR >= 0) day.wins++;
-      else if (pnlR < 0) day.losses++;
+    }
+
+    const pnlCurrency = Number(trade.pnl_currency);
+    if (pnlCurrency >= 0) {
+      day.wins++;
+    } else {
+      day.losses++;
     }
   }
 

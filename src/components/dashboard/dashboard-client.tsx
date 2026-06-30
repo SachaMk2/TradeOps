@@ -19,7 +19,15 @@ import {
   pnlDelta30d,
 } from '@/lib/metrics/compute';
 import dynamic from 'next/dynamic';
-import { subDays, isAfter, parseISO } from 'date-fns';
+import { 
+  subDays, 
+  isAfter, 
+  parseISO, 
+  startOfDay, 
+  startOfWeek, 
+  startOfMonth, 
+  startOfYear 
+} from 'date-fns';
 import { StatCard } from './stat-card';
 import {
   Select,
@@ -64,17 +72,23 @@ interface DashboardClientProps {
 }
 
 export function DashboardClient({ trades, accounts, payouts, setups, sessions }: DashboardClientProps) {
-  const [dateRange, setDateRange] = useState('90');
+  const [dateRange, setDateRange] = useState('month');
   const [filterAccount, setFilterAccount] = useState('all');
   const [filterSetup, setFilterSetup] = useState('all');
   const [useR, setUseR] = useState(false);
 
   const filteredTrades = useMemo(() => {
-    const cutoff = subDays(new Date(), parseInt(dateRange));
+    let cutoff: Date | null = null;
+    const now = new Date();
+    if (dateRange === 'today') cutoff = startOfDay(now);
+    else if (dateRange === 'week') cutoff = startOfWeek(now, { weekStartsOn: 1 });
+    else if (dateRange === 'month') cutoff = startOfMonth(now);
+    else if (dateRange === 'year') cutoff = startOfYear(now);
+
     return trades.filter((t) => {
       const matchAccount = filterAccount === 'all' || (t.trade_executions && t.trade_executions.some(e => e.account_id === filterAccount));
       const matchSetup = filterSetup === 'all' || t.setup_id === filterSetup;
-      const matchDate = dateRange === '9999' || isAfter(parseISO(t.created_at), cutoff);
+      const matchDate = !cutoff || isAfter(parseISO(t.created_at), cutoff);
       return matchAccount && matchSetup && matchDate;
     }).map(t => {
       // Calculate dynamic PnL based on filter
@@ -146,12 +160,11 @@ export function DashboardClient({ trades, accounts, payouts, setups, sessions }:
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="7">Last 7 days</SelectItem>
-            <SelectItem value="30">Last 30 days</SelectItem>
-            <SelectItem value="90">Last 90 days</SelectItem>
-            <SelectItem value="180">Last 6 months</SelectItem>
-            <SelectItem value="365">Last year</SelectItem>
-            <SelectItem value="9999">All time</SelectItem>
+            <SelectItem value="today">Daily (Today)</SelectItem>
+            <SelectItem value="week">Weekly</SelectItem>
+            <SelectItem value="month">Monthly</SelectItem>
+            <SelectItem value="year">Yearly</SelectItem>
+            <SelectItem value="all">All Time</SelectItem>
           </SelectContent>
         </Select>
 
