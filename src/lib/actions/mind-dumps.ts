@@ -27,7 +27,7 @@ export async function getMindDumps(): Promise<ActionResult<MindDump[]>> {
   return { ok: true, data: (data ?? []) as MindDump[] };
 }
 
-export async function createMindDump(input: { dump_date: string; content: string }): Promise<ActionResult<MindDump>> {
+export async function createMindDump(input: { dump_date: string; content: string; image_urls?: string[] }): Promise<ActionResult<MindDump>> {
   if (isDevBypass()) {
     const { mockStore } = await import('@/lib/mock/store');
     const md = mockStore.createMindDump(input);
@@ -45,6 +45,7 @@ export async function createMindDump(input: { dump_date: string; content: string
     user_id: user.id,
     dump_date: input.dump_date,
     content: input.content,
+    image_urls: input.image_urls ?? [],
   }).select().single();
 
   if (error) return { ok: false, error: error.message };

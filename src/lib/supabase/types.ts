@@ -132,6 +132,7 @@ export interface MindDump {
   user_id: string;
   dump_date: string;
   content: string;
+  image_urls?: string[] | null;
   created_at: string;
 }
 

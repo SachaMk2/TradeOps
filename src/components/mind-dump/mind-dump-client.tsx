@@ -7,9 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Calendar, Trash2, Brain } from 'lucide-react';
+import { Calendar, Trash2, Brain, ImagePlus, X, ImageIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import Image from 'next/image';
+import { uploadScreenshots } from '@/lib/actions/screenshots';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
 interface MindDumpClientProps {
   initialDumps: MindDump[];
@@ -27,13 +30,42 @@ export function MindDumpClient({ initialDumps }: MindDumpClientProps) {
   // Form State
   const [dumpDate, setDumpDate] = useState(new Date().toISOString().slice(0, 10));
   const [content, setContent] = useState('');
+  const [screenshotFiles, setScreenshotFiles] = useState<File[]>([]);
+  const [newScreenshots, setNewScreenshots] = useState<string[]>([]);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files) return;
+    const files = Array.from(e.target.files);
+    setScreenshotFiles((prev) => [...prev, ...files]);
+    const urls = files.map((f) => URL.createObjectURL(f));
+    setNewScreenshots((prev) => [...prev, ...urls]);
+  }
+
+  function removeScreenshot(index: number) {
+    setNewScreenshots((prev) => prev.filter((_, i) => i !== index));
+    setScreenshotFiles((prev) => prev.filter((_, i) => i !== index));
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!dumpDate || !content.trim()) return;
 
     setLoading(true);
-    const result = await createMindDump({ dump_date: dumpDate, content });
+    let uploadedUrls: string[] = [];
+    if (screenshotFiles.length > 0) {
+      const formData = new FormData();
+      screenshotFiles.forEach((file) => formData.append('files', file));
+      const uploadResult = await uploadScreenshots(formData);
+      if (!uploadResult.ok) {
+        toast.error('Failed to upload images: ' + uploadResult.error);
+        setLoading(false);
+        return;
+      }
+      uploadedUrls = uploadResult.data ?? [];
+    }
+
+    const result = await createMindDump({ dump_date: dumpDate, content, image_urls: uploadedUrls });
     setLoading(false);
 
     if (!result.ok) {
@@ -41,6 +73,8 @@ export function MindDumpClient({ initialDumps }: MindDumpClientProps) {
     } else if (result.data) {
       setDumps((prev) => [result.data!, ...prev].sort((a, b) => new Date(b.dump_date).getTime() - new Date(a.dump_date).getTime()));
       setContent('');
+      setScreenshotFiles([]);
+      setNewScreenshots([]);
       toast.success('Mind dump saved');
     }
   }
@@ -108,6 +142,36 @@ export function MindDumpClient({ initialDumps }: MindDumpClientProps) {
             />
           </div>
 
+          <div className="space-y-2">
+            <Label className="text-xs uppercase tracking-wider text-muted-foreground">Attached Images</Label>
+            <div className="flex flex-wrap gap-2">
+              {newScreenshots.map((url, idx) => (
+                <div key={idx} className="relative w-24 h-24 rounded-lg overflow-hidden border border-border bg-muted/20 group">
+                  <Image src={url} alt="Screenshot preview" fill className="object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removeScreenshot(idx)}
+                    className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+              
+              <label className="w-24 h-24 rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center cursor-pointer hover:bg-background/50 hover:border-primary/50 transition-colors text-muted-foreground hover:text-primary">
+                <ImagePlus className="w-5 h-5 mb-1" />
+                <span className="text-[10px] font-medium">Add Images</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={handleImageUpload}
+                />
+              </label>
+            </div>
+          </div>
+
           <Button type="submit" className="w-full" disabled={loading || !content.trim()}>
             {loading ? 'Saving...' : 'Save Mind Dump'}
           </Button>
@@ -147,6 +211,24 @@ export function MindDumpClient({ initialDumps }: MindDumpClientProps) {
                 <div className="text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
                   {dump.content}
                 </div>
+                {dump.image_urls && dump.image_urls.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-border/30">
+                    <div className="flex flex-wrap gap-2">
+                      {dump.image_urls.map((url, idx) => (
+                        <div
+                          key={idx}
+                          className="relative w-32 h-24 rounded-lg overflow-hidden border border-border/50 bg-muted/20 interactive-card group cursor-pointer"
+                          onClick={() => setSelectedImage(url)}
+                        >
+                          <Image src={url} alt={`Screenshot ${idx + 1}`} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 33vw" />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span className="text-white text-xs font-medium">Click to enlarge</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
             
@@ -181,6 +263,17 @@ export function MindDumpClient({ initialDumps }: MindDumpClientProps) {
           </div>
         )}
       </div>
+      {/* Enlarged Image Modal */}
+      <Dialog open={!!selectedImage} onOpenChange={(open) => !open && setSelectedImage(null)}>
+        <DialogContent className="max-w-6xl w-[90vw] p-0 border-none bg-transparent shadow-none">
+          <DialogTitle className="sr-only">Enlarged Mind Dump Image</DialogTitle>
+          {selectedImage && (
+            <div className="relative w-full h-[80vh] max-h-[90vh] rounded-lg overflow-hidden flex items-center justify-center bg-black/50 glass">
+              <Image src={selectedImage} alt="Enlarged image" fill className="object-contain" sizes="100vw" />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
