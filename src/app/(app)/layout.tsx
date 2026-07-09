@@ -25,7 +25,7 @@ export default async function AppLayout({
   // Check premium status
   let isPremium = true;
   if (!isDevBypass() && user) {
-    if (user.email === process.env.ADMIN_EMAIL) {
+    if (user.email?.toLowerCase() === process.env.ADMIN_EMAIL?.toLowerCase()) {
       isPremium = true;
     } else {
       const { data: profile } = await supabase
