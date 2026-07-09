@@ -25,13 +25,17 @@ export default async function AppLayout({
   // Check premium status
   let isPremium = true;
   if (!isDevBypass() && user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('is_premium')
-      .eq('id', user.id)
-      .single();
-    
-    isPremium = profile?.is_premium ?? false;
+    if (user.email === process.env.ADMIN_EMAIL) {
+      isPremium = true;
+    } else {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('is_premium')
+        .eq('id', user.id)
+        .single();
+      
+      isPremium = profile?.is_premium ?? false;
+    }
   }
 
   return (
