@@ -17,21 +17,15 @@ export function OnboardingFlow() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  // Step 1: Profile
+  // Step 4: Profile
   const [fullName, setFullName] = useState('');
 
-  // Step 2: Account
+  // Step 5: Account
   const [providerName, setProviderName] = useState('');
   const [accountSize, setAccountSize] = useState('');
 
-  // Step 3: Setup
-  const [setupName, setSetupName] = useState('');
-
-  // Step 4: Session
-  const [sessionName, setSessionName] = useState('');
-
   async function handleNext() {
-    if (step === 1 && !fullName.trim()) {
+    if (step === 4 && !fullName.trim()) {
       toast.error('Veuillez entrer votre nom');
       return;
     }
@@ -45,7 +39,6 @@ export function OnboardingFlow() {
   async function handleFinish() {
     setLoading(true);
     try {
-      // Create Account if provided
       if (providerName.trim() && accountSize) {
         await createAccount({
           provider_name: providerName.trim(),
@@ -54,26 +47,11 @@ export function OnboardingFlow() {
           phase: 'eval_p1',
         });
       }
-
-      // Create Setup if provided
-      if (setupName.trim()) {
-        await createSetup(
-          setupName.trim(),
-          'My first setup created during onboarding',
-          '#8b5cf6'
-        );
-      }
-
-      // Create Session if provided
-      if (sessionName.trim()) {
-        await createSession(sessionName.trim());
-      }
-
-      // Finally complete onboarding
-      const result = await completeOnboarding(fullName.trim());
+      
+      const result = await completeOnboarding(fullName.trim() || 'Opérateur');
       if (result.ok) {
-        toast.success('Bienvenue dans SACH MK2 !');
-        router.refresh(); // Reload to hide the modal
+        toast.success('Bienvenue dans l\'élite !');
+        router.refresh(); 
       } else {
         toast.error('Erreur lors de la configuration');
       }
@@ -85,125 +63,144 @@ export function OnboardingFlow() {
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-md">
-      <div className="glass max-w-lg w-full mx-4 rounded-2xl p-8 border-primary/20 shadow-[0_0_50px_rgba(109,40,217,0.15)] animate-in fade-in zoom-in duration-300">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0B0510]/95 backdrop-blur-xl">
+      <div className="glass max-w-2xl w-full mx-4 rounded-3xl overflow-hidden border-primary/20 shadow-[0_0_80px_rgba(109,40,217,0.15)] animate-in fade-in zoom-in duration-500 relative">
         
         {/* Progress Bar */}
-        <div className="flex gap-2 mb-8">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className={`h-1.5 flex-1 rounded-full transition-colors ${step >= i ? 'bg-primary shadow-[0_0_10px_rgba(109,40,217,0.5)]' : 'bg-primary/20'}`} />
+        <div className="absolute top-0 left-0 right-0 flex gap-1 p-4 z-10">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${step >= i ? 'bg-primary shadow-[0_0_10px_rgba(109,40,217,0.8)]' : 'bg-white/10'}`} />
           ))}
         </div>
 
-        {step === 1 && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-2">Bienvenue dans SACH MK2</h2>
-              <p className="text-muted-foreground">Commençons par faire connaissance. Quel est votre nom ou pseudo de trader ?</p>
-            </div>
-            <div className="space-y-2">
-              <Label>Nom d'opérateur</Label>
-              <Input 
-                value={fullName} 
-                onChange={(e) => setFullName(e.target.value)} 
-                placeholder="Ex: Sacha, TraderX..." 
-                className="bg-background/50 h-12 text-lg"
-                autoFocus
-              />
-            </div>
-            <Button className="w-full h-12 text-lg font-bold" onClick={handleNext} disabled={!fullName.trim()}>
-              Continuer <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-          </div>
-        )}
-
-        {step === 2 && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-2">Votre Premier Compte</h2>
-              <p className="text-muted-foreground">Ajoutez un compte Prop Firm ou Personnel pour commencer à trader.</p>
-            </div>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label>Nom du Compte / Prop Firm</Label>
-                <Input 
-                  value={providerName} 
-                  onChange={(e) => setProviderName(e.target.value)} 
-                  placeholder="Ex: FTMO, Compte Personnel..." 
-                  className="bg-background/50"
-                  autoFocus
-                />
+        {/* Carousel Steps */}
+        <div className="p-8 pt-16">
+          {/* STEP 1: Feature 1 */}
+          {step === 1 && (
+            <div className="space-y-6 text-center animate-in slide-in-from-right-8 duration-500">
+              <div className="w-full h-64 bg-gradient-to-br from-primary/20 to-purple-500/10 rounded-2xl border border-white/5 flex items-center justify-center overflow-hidden relative mb-8">
+                {/* Placeholder for App Screenshot */}
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay" />
+                <div className="relative z-10 p-6 glass rounded-xl border-primary/30">
+                  <h3 className="text-xl font-bold text-white mb-2">Dashboard Institutionnel</h3>
+                  <p className="text-sm text-white/70">Toutes vos métriques en temps réel.</p>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>Taille du Compte ($)</Label>
-                <Input 
-                  type="number"
-                  value={accountSize} 
-                  onChange={(e) => setAccountSize(e.target.value)} 
-                  placeholder="Ex: 100000" 
-                  className="bg-background/50"
-                />
-              </div>
-            </div>
-            <div className="flex gap-3 pt-2">
-              <Button variant="ghost" className="flex-1" onClick={handleSkip}>Ignorer</Button>
-              <Button className="flex-1" onClick={handleNext}>Continuer <ArrowRight className="w-4 h-4 ml-2" /></Button>
-            </div>
-          </div>
-        )}
-
-        {step === 3 && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-2">Votre Setup Favori</h2>
-              <p className="text-muted-foreground">Les setups vous permettent de catégoriser vos trades (ex: Breakout, Rejet...).</p>
-            </div>
-            <div className="space-y-2">
-              <Label>Nom du Setup</Label>
-              <Input 
-                value={setupName} 
-                onChange={(e) => setSetupName(e.target.value)} 
-                placeholder="Ex: Breakout Retest" 
-                className="bg-background/50"
-                autoFocus
-              />
-            </div>
-            <div className="flex gap-3 pt-2">
-              <Button variant="ghost" className="flex-1" onClick={handleSkip}>Ignorer</Button>
-              <Button className="flex-1" onClick={handleNext}>Continuer <ArrowRight className="w-4 h-4 ml-2" /></Button>
-            </div>
-          </div>
-        )}
-
-        {step === 4 && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-2">Session de Trading</h2>
-              <p className="text-muted-foreground">Définissez votre session de trading principale pour filtrer vos statistiques.</p>
-            </div>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label>Nom de la Session</Label>
-                <Input 
-                  value={sessionName} 
-                  onChange={(e) => setSessionName(e.target.value)} 
-                  placeholder="Ex: London Session" 
-                  className="bg-background/50"
-                  autoFocus
-                />
-              </div>
-            </div>
-            <div className="flex gap-3 pt-2">
-              <Button variant="ghost" onClick={() => setStep(3)}>Retour</Button>
-              <Button className="flex-1 font-bold" onClick={handleFinish} disabled={loading}>
-                {loading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : (
-                  <>Terminer l'Onboarding <CheckCircle2 className="w-5 h-5 ml-2" /></>
-                )}
+              <h2 className="text-3xl font-bold text-white mb-4">Maîtrisez vos statistiques</h2>
+              <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">
+                Prenez des décisions basées sur la data. Visualisez votre Win Rate, Profit Factor et R-Multiple instantanément.
+              </p>
+              <Button size="lg" className="w-full sm:w-auto px-12 h-14 text-lg rounded-full" onClick={handleNext}>
+                Suivant <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </div>
-          </div>
-        )}
+          )}
 
+          {/* STEP 2: Feature 2 */}
+          {step === 2 && (
+            <div className="space-y-6 text-center animate-in slide-in-from-right-8 duration-500">
+              <div className="w-full h-64 bg-gradient-to-br from-blue-500/20 to-cyan-500/10 rounded-2xl border border-white/5 flex items-center justify-center overflow-hidden relative mb-8">
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1642790106117-e829e14a795f?q=80&w=1200&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay" />
+                <div className="relative z-10 p-6 glass rounded-xl border-blue-500/30">
+                  <h3 className="text-xl font-bold text-white mb-2">Journal Avancé</h3>
+                  <p className="text-sm text-white/70">Tracez chaque trade avec précision.</p>
+                </div>
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-4">Ne laissez rien au hasard</h2>
+              <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">
+                Enregistrez vos entrées, sorties, émotions et erreurs. Attachez des captures d'écran pour revoir vos setups.
+              </p>
+              <Button size="lg" className="w-full sm:w-auto px-12 h-14 text-lg rounded-full" onClick={handleNext}>
+                Suivant <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          )}
+
+          {/* STEP 3: Feature 3 */}
+          {step === 3 && (
+            <div className="space-y-6 text-center animate-in slide-in-from-right-8 duration-500">
+              <div className="w-full h-64 bg-gradient-to-br from-emerald-500/20 to-green-500/10 rounded-2xl border border-white/5 flex items-center justify-center overflow-hidden relative mb-8">
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay" />
+                <div className="relative z-10 p-6 glass rounded-xl border-emerald-500/30">
+                  <h3 className="text-xl font-bold text-white mb-2">Calendrier de Performance</h3>
+                  <p className="text-sm text-white/70">La régularité visuelle.</p>
+                </div>
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-4">Bâtissez votre constance</h2>
+              <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">
+                Visualisez vos jours de gain et de perte. Le calendrier transforme la rigueur en un jeu vidéo où l'objectif est de rester vert.
+              </p>
+              <Button size="lg" className="w-full sm:w-auto px-12 h-14 text-lg rounded-full" onClick={handleNext}>
+                Configurer mon profil <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          )}
+
+          {/* STEP 4: Profile Setup */}
+          {step === 4 && (
+            <div className="space-y-8 animate-in slide-in-from-right-8 duration-500 text-left py-8">
+              <div>
+                <h2 className="text-3xl font-bold text-white mb-2">Identité</h2>
+                <p className="text-muted-foreground text-lg">Quel est votre nom d'opérateur ?</p>
+              </div>
+              <div className="space-y-3">
+                <Label className="text-sm uppercase tracking-wider text-muted-foreground">Nom / Pseudo</Label>
+                <Input 
+                  value={fullName} 
+                  onChange={(e) => setFullName(e.target.value)} 
+                  placeholder="Ex: Sacha, TraderX..." 
+                  className="bg-background/50 h-14 text-xl rounded-xl border-white/10 focus:border-primary"
+                  autoFocus
+                />
+              </div>
+              <Button size="lg" className="w-full h-14 text-lg rounded-xl" onClick={handleNext} disabled={!fullName.trim()}>
+                Continuer <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          )}
+
+          {/* STEP 5: Account Setup & Finish */}
+          {step === 5 && (
+            <div className="space-y-8 animate-in slide-in-from-right-8 duration-500 text-left py-8">
+              <div>
+                <h2 className="text-3xl font-bold text-white mb-2">Premier Capital</h2>
+                <p className="text-muted-foreground text-lg">Ajoutez un compte pour commencer (Optionnel).</p>
+              </div>
+              <div className="space-y-5">
+                <div className="space-y-3">
+                  <Label className="text-sm uppercase tracking-wider text-muted-foreground">Prop Firm / Courtier</Label>
+                  <Input 
+                    value={providerName} 
+                    onChange={(e) => setProviderName(e.target.value)} 
+                    placeholder="Ex: FTMO, Topstep..." 
+                    className="bg-background/50 h-12 rounded-xl"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <Label className="text-sm uppercase tracking-wider text-muted-foreground">Taille du Compte ($)</Label>
+                  <Input 
+                    type="number"
+                    value={accountSize} 
+                    onChange={(e) => setAccountSize(e.target.value)} 
+                    placeholder="Ex: 50000" 
+                    className="bg-background/50 h-12 rounded-xl"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-4 pt-4">
+                <Button size="lg" variant="ghost" className="flex-1 h-14 text-lg rounded-xl" onClick={handleFinish} disabled={loading}>
+                  Passer
+                </Button>
+                <Button size="lg" className="flex-1 h-14 text-lg font-bold rounded-xl" onClick={handleFinish} disabled={loading}>
+                  {loading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : (
+                    <>Accéder à l'application <CheckCircle2 className="w-5 h-5 ml-2" /></>
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
+
+        </div>
       </div>
     </div>
   );

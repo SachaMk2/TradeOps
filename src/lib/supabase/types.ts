@@ -29,6 +29,15 @@ export type GoalStatus = 'active' | 'completed' | 'abandoned';
 
 // ---- Row Types ----
 
+export interface Profile {
+  id: string;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+  is_premium: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Account {
   id: string;
   user_id: string;

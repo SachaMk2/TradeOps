@@ -40,26 +40,42 @@ export default function MarketingPage() {
             Plateforme en direct
           </div>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-8 leading-tight">
-            Maîtrisez les marchés avec <br />
+            L'outil ultime des <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-primary">
-              l'Académie SACH MK2
+              Traders Rentables
             </span>
           </h1>
           <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-12">
-            Rejoignez une communauté d'opérateurs d'élite. Accédez à nos outils institutionnels, notre journal de trading avancé et suivez nos lives quotidiens.
+            Rejoignez l'élite. Accédez à notre journal de trading avancé, nos statistiques institutionnelles et nos outils exclusifs. Transformez votre trading aujourd'hui.
           </p>
+
+          {/* Pricing Highlight */}
+          <div className="mb-12 flex flex-col items-center">
+            <div className="glass px-8 py-6 rounded-2xl border border-primary/30 bg-white/5 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="flex items-center gap-2 mb-2 justify-center">
+                <span className="text-sm font-semibold uppercase tracking-wider text-primary">Offre Limitée</span>
+              </div>
+              <div className="flex items-baseline gap-3 justify-center">
+                <span className="text-2xl text-muted-foreground line-through decoration-red-500/50">29.99€</span>
+                <span className="text-5xl font-extrabold text-white">9.99€<span className="text-xl text-white/60 font-medium">/mois</span></span>
+              </div>
+              <p className="text-sm text-white/70 mt-2">Accès complet à la plateforme SACH MK2</p>
+            </div>
+          </div>
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/login">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 h-14 text-lg font-semibold shadow-[0_0_30px_rgba(112,12,255,0.3)] transition-all hover:scale-105">
-                Commencer maintenant
-                <ChevronRight className="w-5 h-5 ml-2" />
+              <Button size="lg" className="h-14 px-8 text-lg font-semibold rounded-full bg-white text-black hover:bg-white/90 shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:scale-105 transition-all">
+                Démarrer maintenant
+                <ChevronRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
           </div>
         </section>
 
-        {/* Features Section ("Nos Avantages") */}
-        <section className="w-full max-w-6xl mx-auto px-6 py-24 border-t border-white/5">
+        {/* Feature Grid */}
+        <section className="w-full max-w-7xl mx-auto px-6 pb-32 border-t border-white/5 pt-24">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Nos <span className="text-[#8B5CF6]">Avantages</span>
