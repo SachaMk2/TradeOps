@@ -23,7 +23,9 @@ export default async function AppLayout({
   const fullName = userMeta.full_name || 'Opérateur';
 
   // Check premium status
+  // TEMPORARILY DISABLED PAYWALL
   let isPremium = true;
+  /*
   if (!isDevBypass() && user) {
     if (user.email?.toLowerCase() === process.env.ADMIN_EMAIL?.toLowerCase()) {
       isPremium = true;
@@ -37,6 +39,7 @@ export default async function AppLayout({
       isPremium = profile?.is_premium ?? false;
     }
   }
+  */
 
   return (
     <div className="flex min-h-screen relative">
