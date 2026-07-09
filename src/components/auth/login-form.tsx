@@ -6,7 +6,16 @@ import { signInWithEmail, signUpWithEmail } from '@/lib/actions/auth';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { Loader2, MailCheck } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 export function LoginForm({ initialMode = 'signin' }: { initialMode?: 'signin' | 'signup' }) {
   const [email, setEmail] = useState('');
@@ -15,6 +24,7 @@ export function LoginForm({ initialMode = 'signin' }: { initialMode?: 'signin' |
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
+  const [showVerifyEmail, setShowVerifyEmail] = useState(false);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -30,8 +40,8 @@ export function LoginForm({ initialMode = 'signin' }: { initialMode?: 'signin' |
         setError(result.error);
         return;
       }
-      setSuccess('Compte créé ! Veuillez vous connecter pour continuer.');
       setMode('signin');
+      setShowVerifyEmail(true);
       return;
     }
 
@@ -48,7 +58,8 @@ export function LoginForm({ initialMode = 'signin' }: { initialMode?: 'signin' |
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <>
+      <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email" className="text-sm text-muted-foreground">
           Email
@@ -121,5 +132,30 @@ export function LoginForm({ initialMode = 'signin' }: { initialMode?: 'signin' |
         </button>
       </div>
     </form>
+
+    <AlertDialog open={showVerifyEmail} onOpenChange={setShowVerifyEmail}>
+      <AlertDialogContent className="glass border-primary/20 bg-background/95 backdrop-blur-xl">
+        <AlertDialogHeader>
+          <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-primary/30">
+            <MailCheck className="w-6 h-6 text-primary" />
+          </div>
+          <AlertDialogTitle className="text-2xl text-center font-bold text-white">Vérifiez votre e-mail</AlertDialogTitle>
+          <AlertDialogDescription className="text-center text-muted-foreground mt-2">
+            Votre compte a été créé avec succès ! Cependant, pour des raisons de sécurité, vous devez confirmer votre adresse e-mail.
+            <br/><br/>
+            Un lien vient de vous être envoyé. <strong>Cliquez dessus pour activer votre compte</strong>, puis revenez ici pour vous connecter.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="sm:justify-center mt-6">
+          <AlertDialogAction 
+            onClick={() => setShowVerifyEmail(false)}
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold h-12 rounded-xl"
+          >
+            J'ai compris
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+    </>
   );
 }
