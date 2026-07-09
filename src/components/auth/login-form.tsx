@@ -30,7 +30,7 @@ export function LoginForm({ initialMode = 'signin' }: { initialMode?: 'signin' |
         setError(result.error);
         return;
       }
-      setSuccess('Account created! Check your email for a confirmation link, or sign in if email confirmation is disabled.');
+      setSuccess('Compte créé ! Veuillez vous connecter pour continuer.');
       setMode('signin');
       return;
     }
@@ -56,7 +56,7 @@ export function LoginForm({ initialMode = 'signin' }: { initialMode?: 'signin' |
         <Input
           id="email"
           type="email"
-          placeholder="operator@tradeops.com"
+          placeholder="trader@risedash.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -66,7 +66,7 @@ export function LoginForm({ initialMode = 'signin' }: { initialMode?: 'signin' |
 
       <div className="space-y-2">
         <Label htmlFor="password" className="text-sm text-muted-foreground">
-          Password
+          Mot de passe
         </Label>
         <Input
           id="password"
@@ -101,8 +101,8 @@ export function LoginForm({ initialMode = 'signin' }: { initialMode?: 'signin' |
           <Loader2 className="w-4 h-4 animate-spin mr-2" />
         ) : null}
         {loading
-          ? (mode === 'signin' ? 'Signing in...' : 'Creating account...')
-          : (mode === 'signin' ? 'Sign In' : 'Create Account')}
+          ? (mode === 'signin' ? 'Connexion en cours...' : 'Création du compte...')
+          : (mode === 'signin' ? 'Se connecter' : 'Créer un compte')}
       </Button>
 
       <div className="text-center">
@@ -116,8 +116,8 @@ export function LoginForm({ initialMode = 'signin' }: { initialMode?: 'signin' |
           className="text-sm text-muted-foreground hover:text-primary transition-colors"
         >
           {mode === 'signin'
-            ? "Don't have an account? Sign up"
-            : 'Already have an account? Sign in'}
+            ? "Pas encore de compte ? S'inscrire"
+            : 'Déjà un compte ? Se connecter'}
         </button>
       </div>
     </form>
