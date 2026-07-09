@@ -51,7 +51,7 @@ export default function MarketingPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/login">
+            <Link href="/login?mode=signup">
               <Button size="lg" className="h-14 px-8 text-lg font-semibold rounded-full bg-white text-black hover:bg-white/90 shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:scale-105 transition-all">
                 Démarrer votre ascension
                 <ChevronRight className="ml-2 w-5 h-5" />
@@ -148,7 +148,7 @@ export default function MarketingPage() {
             <p className="text-white/70 mb-8 max-w-xl mx-auto relative z-10">
               Arrêtez de deviner. Commencez à mesurer. Rejoignez les traders qui utilisent Rise Dash pour bâtir leur edge statistique.
             </p>
-            <Link href="/login" className="relative z-10">
+            <Link href="/login?mode=signup" className="relative z-10">
               <Button size="lg" className="h-14 px-8 text-lg font-semibold rounded-full bg-white text-black hover:bg-white/90 shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:scale-105 transition-all">
                 Créer mon compte maintenant
                 <ChevronRight className="ml-2 w-5 h-5" />

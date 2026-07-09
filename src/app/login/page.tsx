@@ -1,6 +1,12 @@
 import { LoginForm } from '@/components/auth/login-form';
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: { mode?: string };
+}) {
+  const modeParam = searchParams?.mode === 'signup' ? 'signup' : 'signin';
+
   return (
     <div className="min-h-screen flex items-center justify-center grid-pattern relative overflow-hidden">
       {/* Background ambient glow */}
@@ -28,7 +34,7 @@ export default function LoginPage() {
 
         {/* Login card */}
         <div className="glass rounded-xl p-6">
-          <LoginForm />
+          <LoginForm initialMode={modeParam} />
         </div>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
