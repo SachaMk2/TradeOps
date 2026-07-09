@@ -1,10 +1,9 @@
 import { LoginForm } from '@/components/auth/login-form';
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: { mode?: string };
+export default async function LoginPage(props: {
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const searchParams = await props.searchParams;
   const modeParam = searchParams?.mode === 'signup' ? 'signup' : 'signin';
 
   return (
@@ -24,7 +23,7 @@ export default async function LoginPage({
               </svg>
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              TradeOps
+              Rise Dash
             </h1>
           </div>
           <p className="text-sm text-muted-foreground">
