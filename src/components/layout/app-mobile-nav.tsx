@@ -76,7 +76,7 @@ export function AppMobileNav() {
           </SheetTrigger>
           <SheetContent side="right" className="bg-sidebar border-l border-sidebar-border w-[280px] p-0 flex flex-col">
             <SheetHeader className="p-6 border-b border-sidebar-border/50">
-              <SheetTitle className="text-left text-white font-bold text-xl">SACH MK2</SheetTitle>
+              <SheetTitle className="text-left text-white font-bold text-xl">Rise Dash</SheetTitle>
             </SheetHeader>
             <div className="flex-1 overflow-y-auto py-4 px-2 space-y-4">
               {navGroups.map((group) => (

@@ -15,7 +15,7 @@ export default function MarketingPage() {
           <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/40">
             <BarChart3 className="w-4 h-4 text-primary" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-white">SACH MK2</span>
+          <span className="text-xl font-bold tracking-tight text-white">Rise Dash</span>
         </div>
         <div className="flex items-center gap-4">
           <Link href="/login" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
@@ -40,13 +40,13 @@ export default function MarketingPage() {
             Plateforme tout-en-un
           </div>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-8 leading-tight">
-            L'écosystème absolu des <br />
+            Élevez votre Trading <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-primary">
-              Traders de l'Élite
+              Au Niveau Supérieur
             </span>
           </h1>
           <p className="text-lg md:text-xl text-white/60 max-w-3xl mx-auto mb-12">
-            Plus qu'un simple journal. SACH MK2 est la plateforme complète réunissant Intelligence Artificielle, 
+            Plus qu'un simple journal. Rise Dash est la plateforme complète réunissant Intelligence Artificielle, 
             statistiques institutionnelles, fil d'actualités et suivi de comptes pour propulser votre rentabilité.
           </p>
 
@@ -146,7 +146,7 @@ export default function MarketingPage() {
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-500/20 opacity-50" />
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 relative z-10">Prêt à dominer les marchés ?</h2>
             <p className="text-white/70 mb-8 max-w-xl mx-auto relative z-10">
-              Arrêtez de deviner. Commencez à mesurer. Rejoignez les traders qui utilisent SACH MK2 pour bâtir leur edge statistique.
+              Arrêtez de deviner. Commencez à mesurer. Rejoignez les traders qui utilisent Rise Dash pour bâtir leur edge statistique.
             </p>
             <Link href="/login" className="relative z-10">
               <Button size="lg" className="h-14 px-8 text-lg font-semibold rounded-full bg-white text-black hover:bg-white/90 shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:scale-105 transition-all">
@@ -161,7 +161,7 @@ export default function MarketingPage() {
 
       {/* Footer */}
       <footer className="border-t border-white/5 py-12 text-center text-white/40 text-sm">
-        <p>© {new Date().getFullYear()} SACH MK2. Tous droits réservés.</p>
+        <p>© {new Date().getFullYear()} Rise Dash. Tous droits réservés.</p>
       </footer>
     </div>
   );

@@ -2,7 +2,7 @@ import { getMindDumps } from '@/lib/actions/mind-dumps';
 import { MindDumpClient } from '@/components/mind-dump/mind-dump-client';
 
 export const metadata = {
-  title: 'Mind Dump | SACH MK2',
+  title: 'Mind Dump | Rise Dash',
   description: 'Log your trading thoughts and ideas',
 };
 
@@ -15,7 +15,7 @@ export default async function MindDumpPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-glow-primary">Mind Dump</h1>
-          <p className="text-muted-foreground mt-1">Empty your head, log your daily insights, and clear your mind before the next session.</p>
+          <p className="text-muted-foreground mt-2">Bienvenue sur Rise Dash. Empty your head, log your daily insights, and clear your mind before the next session.</p>
         </div>
       </div>
 

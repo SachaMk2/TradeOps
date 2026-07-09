@@ -37,9 +37,7 @@ export function AppSidebar({ userName = 'Opérateur' }: { userName?: string }) {
           </svg>
         </div>
         {!collapsed && (
-          <span className="text-lg font-bold tracking-widest text-white uppercase">
-            SACH MK2
-          </span>
+          <span className="font-bold text-lg tracking-tight">Rise Dash</span>
         )}
       </div>
 

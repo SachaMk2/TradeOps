@@ -48,7 +48,7 @@ export function PaywallModal({ onSubscribe, isLoading }: PaywallModalProps) {
         </div>
         
         <h2 className="text-3xl font-bold text-white mb-2 relative z-10">
-          Débloquez SACH MK2
+          Débloquez Rise Dash
         </h2>
         <p className="text-muted-foreground mb-8 relative z-10 text-sm">
           Pour accéder à votre dashboard, à votre journal et à vos statistiques institutionnelles, vous devez souscrire à notre abonnement premium.

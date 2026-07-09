@@ -2,7 +2,7 @@ import { getEconomicNews } from '@/lib/actions/news';
 import { NewsClient } from '@/components/news/news-client';
 
 export const metadata = {
-  title: 'Economic Calendar | SACH MK2',
+  title: 'Economic Calendar | Rise Dash',
   description: 'Track high-impact economic news',
 };
 
