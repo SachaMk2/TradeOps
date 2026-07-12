@@ -95,8 +95,8 @@ export function OnboardingFlow() {
       if (result.ok) {
         toast.success('Bienvenue dans l\'élite !');
         setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 500);
+          window.location.reload();
+        }, 1000);
       } else {
         toast.error('Erreur lors de la configuration');
       }
@@ -108,8 +108,8 @@ export function OnboardingFlow() {
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0B0510]/95 backdrop-blur-2xl">
-      <div className="glass max-w-2xl w-full mx-4 rounded-3xl overflow-hidden border-primary/30 shadow-[0_0_50px_rgba(112,12,255,0.15)] animate-in fade-in zoom-in-95 duration-700 relative">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0B0510]/95 backdrop-blur-2xl">
+      <div className="w-full max-w-lg glass rounded-3xl p-8 border-primary/30 relative overflow-hidden shadow-[0_0_50px_rgba(112,12,255,0.15)] animate-in fade-in zoom-in-95 duration-700">
         
         {/* Glow Effects */}
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/30 rounded-full blur-[100px] pointer-events-none" />
@@ -123,7 +123,7 @@ export function OnboardingFlow() {
         </div>
 
         {/* Carousel Steps */}
-        <div className="p-8 pt-20 relative z-10">
+        <div className="pt-12 relative z-10">
           {/* STEP 1: Feature 1 */}
           {step === 1 && (
             <div className="space-y-8 text-center animate-in slide-in-from-right-12 duration-700 fade-in">

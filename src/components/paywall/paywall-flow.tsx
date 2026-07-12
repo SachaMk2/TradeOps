@@ -37,8 +37,8 @@ export function PaywallFlow() {
         if (error) throw error;
         toast.success("Paiement simulé avec succès !");
         setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 500);
+          window.location.reload();
+        }, 1000);
       }
     } catch (error) {
       toast.error("Erreur lors de la simulation du paiement.");

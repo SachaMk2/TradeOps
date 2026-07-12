@@ -16,6 +16,9 @@ export async function signInWithEmail(
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { ok: false, error: error.message };
+  
+  const { redirect } = await import('next/navigation');
+  redirect('/dashboard');
   return { ok: true, data: undefined };
 }
 
