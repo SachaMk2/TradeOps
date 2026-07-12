@@ -20,13 +20,28 @@ export function OnboardingFlow() {
   // Step 4: Profile
   const [fullName, setFullName] = useState('');
 
-  // Step 5: Account
+  // Step 5: Setup
+  const [setupName, setSetupName] = useState('');
+  const [setupDescription, setSetupDescription] = useState('');
+
+  // Step 6: Session
+  const [sessionName, setSessionName] = useState('');
+
+  // Step 7: Account
   const [providerName, setProviderName] = useState('');
   const [accountSize, setAccountSize] = useState('');
 
   async function handleNext() {
     if (step === 4 && !fullName.trim()) {
       toast.error('Veuillez entrer votre nom');
+      return;
+    }
+    if (step === 5 && !setupName.trim()) {
+      toast.error('Veuillez entrer un nom pour votre setup');
+      return;
+    }
+    if (step === 6 && !sessionName.trim()) {
+      toast.error('Veuillez entrer un nom de session');
       return;
     }
     setStep((s) => s + 1);
@@ -39,6 +54,14 @@ export function OnboardingFlow() {
   async function handleFinish() {
     setLoading(true);
     try {
+      if (setupName.trim()) {
+        await createSetup(setupName.trim(), setupDescription.trim() || 'Setup principal', '#3b82f6');
+      }
+      
+      if (sessionName.trim()) {
+        await createSession(sessionName.trim());
+      }
+
       if (providerName.trim() && accountSize) {
         await createAccount({
           provider_name: providerName.trim(),
@@ -68,7 +91,7 @@ export function OnboardingFlow() {
         
         {/* Progress Bar */}
         <div className="absolute top-0 left-0 right-0 flex gap-1 p-4 z-10">
-          {[1, 2, 3, 4, 5].map((i) => (
+          {[1, 2, 3, 4, 5, 6, 7].map((i) => (
             <div key={i} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${step >= i ? 'bg-primary shadow-[0_0_10px_rgba(109,40,217,0.8)]' : 'bg-white/10'}`} />
           ))}
         </div>
@@ -159,8 +182,65 @@ export function OnboardingFlow() {
             </div>
           )}
 
-          {/* STEP 5: Account Setup & Finish */}
+          {/* STEP 5: Setup Configuration */}
           {step === 5 && (
+            <div className="space-y-8 animate-in slide-in-from-right-8 duration-500 text-left py-8">
+              <div>
+                <h2 className="text-3xl font-bold text-white mb-2">Votre Stratégie</h2>
+                <p className="text-muted-foreground text-lg">Définissez votre premier setup de trading.</p>
+              </div>
+              <div className="space-y-5">
+                <div className="space-y-3">
+                  <Label className="text-sm uppercase tracking-wider text-muted-foreground">Nom du Setup</Label>
+                  <Input 
+                    value={setupName} 
+                    onChange={(e) => setSetupName(e.target.value)} 
+                    placeholder="Ex: Breakout Asiatique, SMC..." 
+                    className="bg-background/50 h-12 rounded-xl"
+                    autoFocus
+                  />
+                </div>
+                <div className="space-y-3">
+                  <Label className="text-sm uppercase tracking-wider text-muted-foreground">Description (Optionnel)</Label>
+                  <Input 
+                    value={setupDescription} 
+                    onChange={(e) => setSetupDescription(e.target.value)} 
+                    placeholder="Quelles sont les conditions ?" 
+                    className="bg-background/50 h-12 rounded-xl"
+                  />
+                </div>
+              </div>
+              <Button size="lg" className="w-full h-14 text-lg rounded-xl" onClick={handleNext} disabled={!setupName.trim()}>
+                Continuer <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          )}
+
+          {/* STEP 6: Session Configuration */}
+          {step === 6 && (
+            <div className="space-y-8 animate-in slide-in-from-right-8 duration-500 text-left py-8">
+              <div>
+                <h2 className="text-3xl font-bold text-white mb-2">Horaires de Trading</h2>
+                <p className="text-muted-foreground text-lg">Quand préférez-vous trader ?</p>
+              </div>
+              <div className="space-y-3">
+                <Label className="text-sm uppercase tracking-wider text-muted-foreground">Nom de la Session</Label>
+                <Input 
+                  value={sessionName} 
+                  onChange={(e) => setSessionName(e.target.value)} 
+                  placeholder="Ex: London Open, New York Morning..." 
+                  className="bg-background/50 h-14 text-xl rounded-xl border-white/10 focus:border-primary"
+                  autoFocus
+                />
+              </div>
+              <Button size="lg" className="w-full h-14 text-lg rounded-xl" onClick={handleNext} disabled={!sessionName.trim()}>
+                Continuer <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          )}
+
+          {/* STEP 7: Account Setup & Finish */}
+          {step === 7 && (
             <div className="space-y-8 animate-in slide-in-from-right-8 duration-500 text-left py-8">
               <div>
                 <h2 className="text-3xl font-bold text-white mb-2">Premier Capital</h2>
