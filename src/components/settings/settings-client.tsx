@@ -8,20 +8,23 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Clock, Plus, Pencil, Trash2, Check, X, User, Loader2 } from 'lucide-react';
+import { Clock, Plus, Pencil, Trash2, Check, X, User, Loader2, Sparkles, CreditCard, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface SettingsClientProps {
   initialSessions: TradingSession[];
   initialFullName: string;
+  isPremium: boolean;
+  stripeCustomerId: string | null;
 }
 
-export function SettingsClient({ initialSessions, initialFullName }: SettingsClientProps) {
+export function SettingsClient({ initialSessions, initialFullName, isPremium, stripeCustomerId }: SettingsClientProps) {
   const [sessions, setSessions] = useState(initialSessions);
   const [newName, setNewName] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [isAdding, setIsAdding] = useState(false);
+  const [isManagingBilling, setIsManagingBilling] = useState(false);
 
   // Profile State
   const [fullName, setFullName] = useState(initialFullName);
@@ -76,11 +79,31 @@ export function SettingsClient({ initialSessions, initialFullName }: SettingsCli
     }
   }
 
+  async function handleManageBilling() {
+    try {
+      setIsManagingBilling(true);
+      const res = await fetch('/api/stripe/portal', {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error("Impossible d'accéder au portail de facturation");
+      }
+    } catch (e) {
+      toast.error("Une erreur est survenue");
+    } finally {
+      setIsManagingBilling(false);
+    }
+  }
+
   return (
     <Tabs defaultValue="profile" className="space-y-6">
       <TabsList className="bg-background/50 border border-border/50">
         <TabsTrigger value="profile" className="gap-2"><User className="w-4 h-4" /> Profil</TabsTrigger>
         <TabsTrigger value="sessions" className="gap-2"><Clock className="w-4 h-4" /> Sessions</TabsTrigger>
+        <TabsTrigger value="billing" className="gap-2"><Sparkles className="w-4 h-4" /> Abonnement</TabsTrigger>
       </TabsList>
 
       <TabsContent value="profile" className="space-y-6">
@@ -218,6 +241,58 @@ export function SettingsClient({ initialSessions, initialFullName }: SettingsCli
           )}
         </div>
       </div>
+      </TabsContent>
+
+      <TabsContent value="billing" className="space-y-6">
+        <div className="glass rounded-xl p-6 space-y-6">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold">Gérer mon Abonnement</h2>
+              <p className="text-xs text-muted-foreground">Consultez et modifiez votre forfait premium.</p>
+            </div>
+          </div>
+
+          <div className="bg-background/40 border border-border/50 rounded-xl p-5 flex items-center justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <h3 className="font-medium">Statut Actuel</h3>
+                {isPremium ? (
+                  <span className="bg-profit/10 text-profit border border-profit/20 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3" /> Premium
+                  </span>
+                ) : (
+                  <span className="bg-muted text-muted-foreground text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">
+                    Gratuit
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {isPremium 
+                  ? 'Vous bénéficiez de l\'accès complet au Dashboard, au Journal et aux Statistiques Avancées.'
+                  : 'Votre compte est limité. Passez premium pour débloquer toutes les fonctionnalités.'}
+              </p>
+            </div>
+          </div>
+
+          {stripeCustomerId ? (
+            <div className="pt-2">
+              <Button onClick={handleManageBilling} disabled={isManagingBilling} className="gap-2">
+                {isManagingBilling ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
+                Accéder au portail de facturation
+              </Button>
+              <p className="text-xs text-muted-foreground mt-3">
+                Gérez vos moyens de paiement, téléchargez vos factures ou résiliez votre abonnement de manière sécurisée via Stripe.
+              </p>
+            </div>
+          ) : (
+            <div className="pt-2 text-sm text-muted-foreground italic">
+              Aucun abonnement Stripe détecté pour ce compte. Si vous venez de payer, l'activation peut prendre quelques instants.
+            </div>
+          )}
+        </div>
       </TabsContent>
     </Tabs>
   );
