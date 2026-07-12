@@ -31,11 +31,11 @@ export async function getSessions(): Promise<{ ok: boolean; data?: TradingSessio
   }
 }
 
-export async function createSession(name: string): Promise<{ ok: boolean; data?: TradingSession; error?: string }> {
+export async function createSession(name: string, startTime?: string | null, endTime?: string | null): Promise<{ ok: boolean; data?: TradingSession; error?: string }> {
   try {
     if (DEV_BYPASS_AUTH) {
       const { mockStore } = await import('@/lib/mock/store');
-      const s = mockStore.createSession({ name });
+      const s = mockStore.createSession({ name, start_time: startTime || null, end_time: endTime || null });
       revalidatePath('/settings');
       return { ok: true, data: s };
     }
@@ -46,7 +46,7 @@ export async function createSession(name: string): Promise<{ ok: boolean; data?:
 
     const { data, error } = await supabase
       .from('trading_sessions')
-      .insert({ user_id: user.id, name })
+      .insert({ user_id: user.id, name, start_time: startTime || null, end_time: endTime || null })
       .select()
       .single();
 
@@ -58,11 +58,11 @@ export async function createSession(name: string): Promise<{ ok: boolean; data?:
   }
 }
 
-export async function updateSession(id: string, name: string): Promise<{ ok: boolean; error?: string }> {
+export async function updateSession(id: string, name: string, startTime?: string | null, endTime?: string | null): Promise<{ ok: boolean; error?: string }> {
   try {
     if (DEV_BYPASS_AUTH) {
       const { mockStore } = await import('@/lib/mock/store');
-      mockStore.updateSession(id, { name });
+      mockStore.updateSession(id, { name, start_time: startTime || null, end_time: endTime || null });
       revalidatePath('/settings');
       return { ok: true };
     }
@@ -70,7 +70,7 @@ export async function updateSession(id: string, name: string): Promise<{ ok: boo
     const supabase = await createClient();
     const { error } = await supabase
       .from('trading_sessions')
-      .update({ name })
+      .update({ name, start_time: startTime || null, end_time: endTime || null })
       .eq('id', id);
 
     if (error) throw error;

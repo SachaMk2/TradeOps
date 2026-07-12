@@ -62,9 +62,9 @@ let setups: Setup[] = [
 ];
 
 let sessions: TradingSession[] = [
-  { id: sessionIds[0], user_id: MOCK_USER_ID, name: 'London Session', created_at: new Date().toISOString() },
-  { id: sessionIds[1], user_id: MOCK_USER_ID, name: 'New York Session', created_at: new Date().toISOString() },
-  { id: sessionIds[2], user_id: MOCK_USER_ID, name: 'Asian Session', created_at: new Date().toISOString() },
+  { id: sessionIds[0], user_id: MOCK_USER_ID, name: 'London Session', start_time: '08:00', end_time: '12:00', created_at: new Date().toISOString() },
+  { id: sessionIds[1], user_id: MOCK_USER_ID, name: 'New York Session', start_time: '13:00', end_time: '17:00', created_at: new Date().toISOString() },
+  { id: sessionIds[2], user_id: MOCK_USER_ID, name: 'Asian Session', start_time: '00:00', end_time: '06:00', created_at: new Date().toISOString() },
 ];
 
 let checklistItems: ChecklistItem[] = [
@@ -416,9 +416,9 @@ export const mockStore = {
 
   // SESSIONS
   getSessions: () => [...sessions],
-  createSession: (input: { name: string }): TradingSession => {
+  createSession: (input: { name: string; start_time?: string | null; end_time?: string | null }): TradingSession => {
     const s: TradingSession = {
-      id: uuid(), user_id: MOCK_USER_ID, name: input.name, created_at: new Date().toISOString(),
+      id: uuid(), user_id: MOCK_USER_ID, name: input.name, start_time: input.start_time || null, end_time: input.end_time || null, created_at: new Date().toISOString(),
     };
     sessions = [...sessions, s];
     return s;

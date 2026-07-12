@@ -9,6 +9,8 @@ export interface TradingSession {
   id: string;
   user_id: string;
   name: string;
+  start_time: string | null;
+  end_time: string | null;
   created_at: string;
 }
 export type TradeStatus = 'open' | 'closed' | 'cancelled';
