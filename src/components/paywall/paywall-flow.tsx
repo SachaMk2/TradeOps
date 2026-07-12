@@ -46,5 +46,7 @@ export function PaywallFlow() {
     }
   }
 
-  return <PaywallModal onSubscribe={handleSubscribe} onSimulate={handleSimulate} isLoading={isLoading} />;
+  const isDev = process.env.NODE_ENV === 'development';
+
+  return <PaywallModal onSubscribe={handleSubscribe} onSimulate={isDev ? handleSimulate : undefined} isLoading={isLoading} />;
 }
