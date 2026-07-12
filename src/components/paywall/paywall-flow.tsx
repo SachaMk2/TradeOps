@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { PaywallModal } from './paywall-modal';
 import { toast } from 'sonner';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/browser';
 
 export function PaywallFlow() {
   const [isLoading, setIsLoading] = useState(false);
