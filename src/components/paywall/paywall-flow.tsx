@@ -19,7 +19,7 @@ export function PaywallFlow() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        toast.error("Erreur lors de la création de la session Stripe.");
+        toast.error(data.error || "Erreur lors de la création de la session Stripe.");
       }
     } catch (error) {
       toast.error("Impossible de contacter le serveur de paiement.");
