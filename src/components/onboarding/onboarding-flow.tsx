@@ -94,7 +94,9 @@ export function OnboardingFlow() {
       const result = await completeOnboarding(fullName.trim() || 'Opérateur');
       if (result.ok) {
         toast.success('Bienvenue dans l\'élite !');
-        router.refresh(); 
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 500);
       } else {
         toast.error('Erreur lors de la configuration');
       }
@@ -107,7 +109,7 @@ export function OnboardingFlow() {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0B0510]/95 backdrop-blur-2xl">
-      <div className="glass max-w-2xl w-full mx-4 rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_120px_rgba(109,40,217,0.2)] animate-in fade-in zoom-in-95 duration-700 relative">
+      <div className="glass max-w-2xl w-full mx-4 rounded-3xl overflow-hidden border-primary/30 shadow-[0_0_50px_rgba(112,12,255,0.15)] animate-in fade-in zoom-in-95 duration-700 relative">
         
         {/* Glow Effects */}
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/30 rounded-full blur-[100px] pointer-events-none" />

@@ -53,8 +53,7 @@ export function LoginForm({ initialMode = 'signin' }: { initialMode?: 'signin' |
       return;
     }
 
-    router.push('/');
-    router.refresh();
+    window.location.href = '/dashboard';
   }
 
   return (

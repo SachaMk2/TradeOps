@@ -36,7 +36,9 @@ export function PaywallFlow() {
         const { error } = await supabase.from('profiles').update({ is_premium: true }).eq('id', user.id);
         if (error) throw error;
         toast.success("Paiement simulé avec succès !");
-        window.location.reload();
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 500);
       }
     } catch (error) {
       toast.error("Erreur lors de la simulation du paiement.");
