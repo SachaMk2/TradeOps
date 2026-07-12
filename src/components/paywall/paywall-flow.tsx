@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { PaywallModal } from './paywall-modal';
 import { toast } from 'sonner';
+import { createClient } from '@/lib/supabase/client';
 
 export function PaywallFlow() {
   const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +27,22 @@ export function PaywallFlow() {
       setIsLoading(false);
     }
   }
+  async function handleSimulate() {
+    setIsLoading(true);
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error } = await supabase.from('profiles').update({ is_premium: true }).eq('id', user.id);
+        if (error) throw error;
+        toast.success("Paiement simulé avec succès !");
+        window.location.reload();
+      }
+    } catch (error) {
+      toast.error("Erreur lors de la simulation du paiement.");
+      setIsLoading(false);
+    }
+  }
 
-  return <PaywallModal onSubscribe={handleSubscribe} isLoading={isLoading} />;
+  return <PaywallModal onSubscribe={handleSubscribe} onSimulate={handleSimulate} isLoading={isLoading} />;
 }

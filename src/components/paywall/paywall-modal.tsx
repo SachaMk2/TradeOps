@@ -6,10 +6,11 @@ import { Lock, Clock, Sparkles } from 'lucide-react';
 
 interface PaywallModalProps {
   onSubscribe: () => void;
+  onSimulate?: () => void;
   isLoading: boolean;
 }
 
-export function PaywallModal({ onSubscribe, isLoading }: PaywallModalProps) {
+export function PaywallModal({ onSubscribe, onSimulate, isLoading }: PaywallModalProps) {
   const [timeLeft, setTimeLeft] = useState(24 * 60 * 60); // 24 hours in seconds
 
   useEffect(() => {
@@ -75,12 +76,23 @@ export function PaywallModal({ onSubscribe, isLoading }: PaywallModalProps) {
 
         <Button 
           size="lg" 
-          className="w-full h-14 text-lg font-semibold rounded-xl bg-white text-black hover:bg-white/90 shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all relative z-10"
+          className="w-full h-14 text-lg font-semibold rounded-xl bg-white text-black hover:bg-white/90 shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all relative z-10 mb-4"
           onClick={onSubscribe}
           disabled={isLoading}
         >
           {isLoading ? 'Redirection...' : 'Profiter de la réduction'}
         </Button>
+
+        {onSimulate && (
+          <Button 
+            variant="outline"
+            className="w-full relative z-10 border-white/20 text-white/70 hover:text-white hover:bg-white/10"
+            onClick={onSimulate}
+            disabled={isLoading}
+          >
+            Bouton de Test : Simuler un paiement
+          </Button>
+        )}
         <p className="text-xs text-muted-foreground mt-4 relative z-10">
           Paiement sécurisé via Stripe. Annulable à tout moment.
         </p>
