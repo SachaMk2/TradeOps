@@ -6,12 +6,12 @@ import { useState, useEffect } from 'react';
 import { signOut } from '@/lib/actions/auth';
 import { Button } from '@/components/ui/button';
 import { navGroups } from '@/config/navigation';
-import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LogOut, Users } from 'lucide-react';
 
 
 
 
-export function AppSidebar({ userName = 'Opérateur' }: { userName?: string }) {
+export function AppSidebar({ userName = 'Opérateur', isAdmin = false }: { userName?: string; isAdmin?: boolean }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -53,7 +53,7 @@ export function AppSidebar({ userName = 'Opérateur' }: { userName?: string }) {
 
       {/* Navigation */}
       <nav className="flex-1 py-4 px-2 space-y-4 overflow-y-auto overflow-x-hidden">
-        {navGroups.map((group, groupIdx) => (
+        {[...navGroups, ...(isAdmin ? [{ title: 'Admin', items: [{ href: '/admin/users', label: 'Utilisateurs', icon: Users }] }] : [])].map((group, groupIdx) => (
           <div key={group.title} className="space-y-1">
             {!collapsed && (
               <h4 className="px-4 text-[10px] font-black text-white/40 uppercase tracking-wider mb-2">

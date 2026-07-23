@@ -8,6 +8,7 @@ import {
   CalendarDays,
   PenLine,
   Menu,
+  Users
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -27,7 +28,7 @@ const mainMobileItems = [
   { href: '/calendar', label: 'Calendar', icon: CalendarDays },
 ];
 
-export function AppMobileNav() {
+export function AppMobileNav({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -79,7 +80,7 @@ export function AppMobileNav() {
               <SheetTitle className="text-left text-white font-bold text-xl">Rise Dash</SheetTitle>
             </SheetHeader>
             <div className="flex-1 overflow-y-auto py-4 px-2 space-y-4">
-              {navGroups.map((group) => (
+              {[...navGroups, ...(isAdmin ? [{ title: 'Admin', items: [{ href: '/admin/users', label: 'Utilisateurs', icon: Users }] }] : [])].map((group) => (
                 <div key={group.title} className="space-y-1">
                   <h4 className="px-4 text-[10px] font-black text-white/40 uppercase tracking-wider mb-2">
                     {group.title}

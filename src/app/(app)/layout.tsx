@@ -21,11 +21,12 @@ export default async function AppLayout({
   const userMeta = user?.user_metadata || {};
   const needsOnboarding = !userMeta.onboarding_completed;
   const fullName = userMeta.full_name || 'Opérateur';
+  const isAdmin = user?.email?.toLowerCase() === process.env.ADMIN_EMAIL?.toLowerCase();
 
   // Check premium status
   let isPremium = true;
   if (!isDevBypass() && user) {
-    if (user.email?.toLowerCase() === process.env.ADMIN_EMAIL?.toLowerCase()) {
+    if (isAdmin) {
       isPremium = true;
     } else {
       const { data: profile } = await supabase
@@ -40,8 +41,8 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-screen relative">
-      <AppSidebar userName={fullName} />
-      <AppMobileNav />
+      <AppSidebar userName={fullName} isAdmin={isAdmin} />
+      <AppMobileNav isAdmin={isAdmin} />
       
       {/* Modals with z-index ordering: Onboarding on top of Paywall */}
       <div className="relative z-[60]">
