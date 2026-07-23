@@ -10,9 +10,9 @@ export async function getGoals(): Promise<ActionResult<Goal[]>> {
     return { ok: true, data: mockStore.getGoals() };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase.from('goals').select('*').order('created_at', { ascending: false });
@@ -29,9 +29,9 @@ export async function createGoal(input: Omit<GoalInsert, 'user_id'>): Promise<Ac
     return { ok: true, data: goal };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase.from('goals').insert({
@@ -52,9 +52,9 @@ export async function updateGoal(id: string, updates: GoalUpdate): Promise<Actio
     return { ok: true, data: goal };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase.from('goals')
@@ -77,9 +77,9 @@ export async function deleteGoal(id: string): Promise<ActionResult<void>> {
     return { ok: true, data: undefined };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { error } = await supabase.from('goals').delete().eq('id', id).eq('user_id', user.id);

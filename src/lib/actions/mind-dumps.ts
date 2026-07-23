@@ -10,10 +10,10 @@ export async function getMindDumps(): Promise<ActionResult<MindDump[]>> {
     return { ok: true, data: mockStore.getMindDumps() };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
   
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase
@@ -35,10 +35,10 @@ export async function createMindDump(input: { dump_date: string; content: string
     return { ok: true, data: md };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
   
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase.from('mind_dumps').insert({
@@ -62,10 +62,10 @@ export async function deleteMindDump(id: string): Promise<ActionResult> {
     return { ok: true, data: undefined };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
   
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { error } = await supabase

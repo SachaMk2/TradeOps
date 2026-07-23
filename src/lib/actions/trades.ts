@@ -39,9 +39,9 @@ export async function logTrade(input: {
     return { ok: true, data: trades };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const baseTrade = {
@@ -100,9 +100,9 @@ export async function getTrades(filters?: {
     return { ok: true, data: trades };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   let query = supabase.from('trades')
@@ -135,9 +135,9 @@ export async function getTrade(id: string): Promise<ActionResult<TradeWithRelati
     return { ok: true, data: trade };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase.from('trades')
@@ -155,9 +155,9 @@ export async function updateTrade(id: string, updates: Partial<Trade>): Promise<
     return { ok: true, data: trade };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { id: _id, user_id: _uid, created_at: _ca, ...safeUpdates } = updates;
@@ -176,7 +176,7 @@ export async function updateTradeChecklistItem(id: string, isRespected: boolean,
     return { ok: true, data: { adherence_pct: adherence } };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
 
   await supabase.from('trade_checklist_items').update({ is_respected: isRespected }).eq('id', id);
@@ -240,9 +240,9 @@ export async function updateTradeFull(
     return { ok: true, data: trade };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   // 1. Update base trade
@@ -311,9 +311,9 @@ export async function deleteTrade(id: string): Promise<ActionResult> {
     return { ok: true, data: undefined };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { error } = await supabase.from('trades').delete().eq('id', id).eq('user_id', user.id);

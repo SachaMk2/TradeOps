@@ -9,9 +9,9 @@ export async function uploadScreenshots(formData: FormData): Promise<ActionResul
     return { ok: true, data: Array.from({ length: count }, (_, i) => `https://placeholder.dev/screenshot-${i}.png`) };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const files = formData.getAll('files') as File[];

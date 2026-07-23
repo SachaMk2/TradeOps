@@ -12,9 +12,9 @@ export async function getSetups(): Promise<ActionResult<SetupWithChecklist[]>> {
     return { ok: true, data: mockStore.getSetups() };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data: setups, error } = await supabase
@@ -39,9 +39,9 @@ export async function getSetup(id: string): Promise<ActionResult<SetupWithCheckl
     return { ok: true, data: setup };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase
@@ -63,9 +63,9 @@ export async function createSetup(name: string, description: string, colorCode: 
     return { ok: true, data: setup };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase.from('setups').insert({
@@ -86,9 +86,9 @@ export async function updateSetup(id: string, updates: { name?: string; descript
     return { ok: true, data: setup };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase.from('setups').update(updates).eq('id', id).eq('user_id', user.id).select().single();
@@ -107,9 +107,9 @@ export async function deleteSetup(id: string): Promise<ActionResult> {
     return { ok: true, data: undefined };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { error } = await supabase.from('setups').delete().eq('id', id).eq('user_id', user.id);
@@ -130,7 +130,7 @@ export async function addChecklistItem(setupId: string, content: string, positio
     return { ok: true, data: item };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
   const { data, error } = await supabase.from('checklist_items').insert({ setup_id: setupId, content, position }).select().single();
   if (error) return { ok: false, error: error.message };
@@ -148,7 +148,7 @@ export async function updateChecklistItem(id: string, content: string): Promise<
     return { ok: true, data: item };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
   const { data, error } = await supabase.from('checklist_items').update({ content }).eq('id', id).select().single();
   if (error) return { ok: false, error: error.message };
@@ -166,7 +166,7 @@ export async function deleteChecklistItem(id: string): Promise<ActionResult> {
     return { ok: true, data: undefined };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
   const { error } = await supabase.from('checklist_items').delete().eq('id', id);
   if (error) return { ok: false, error: error.message };
@@ -183,7 +183,7 @@ export async function reorderChecklistItems(items: { id: string; position: numbe
     return { ok: true, data: undefined };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
   const updates = items.map(({ id, position }) => supabase.from('checklist_items').update({ position }).eq('id', id));
   const results = await Promise.all(updates);

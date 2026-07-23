@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { createClient, getUser } from '@/lib/supabase/server';
 import { type TradingSession } from '@/lib/supabase/types';
 import { revalidatePath } from 'next/cache';
 
@@ -15,7 +15,7 @@ export async function getSessions(): Promise<{ ok: boolean; data?: TradingSessio
     }
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user } } = await getUser();
     if (!user) return { ok: false, error: 'Unauthorized' };
 
     const { data, error } = await supabase
@@ -41,7 +41,7 @@ export async function createSession(name: string, startTime?: string | null, end
     }
 
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user } } = await getUser();
     if (!user) return { ok: false, error: 'Unauthorized' };
 
     const { data, error } = await supabase

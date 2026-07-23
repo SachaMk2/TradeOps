@@ -10,9 +10,9 @@ export async function getAccounts(): Promise<ActionResult<Account[]>> {
     return { ok: true, data: mockStore.getAccounts() };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase.from('accounts').select('*').eq('user_id', user.id).order('position', { ascending: true });
@@ -36,9 +36,9 @@ export async function createAccount(input: {
     return { ok: true, data: acc };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data: existing } = await supabase.from('accounts').select('position').eq('user_id', user.id).eq('phase', input.phase).order('position', { ascending: false }).limit(1);
@@ -63,9 +63,9 @@ export async function updateAccount(id: string, updates: Partial<Pick<Account, '
     return { ok: true, data: acc };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase.from('accounts').update(updates).eq('id', id).eq('user_id', user.id).select().single();
@@ -83,9 +83,9 @@ export async function moveAccount(id: string, newPhase: AccountPhase, newPositio
     return { ok: true, data: acc };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const updates: Record<string, unknown> = { phase: newPhase, position: newPosition };
@@ -107,9 +107,9 @@ export async function deleteAccount(id: string): Promise<ActionResult> {
     return { ok: true, data: undefined };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { error } = await supabase.from('accounts').delete().eq('id', id).eq('user_id', user.id);
@@ -127,9 +127,9 @@ export async function getPayouts(accountId?: string): Promise<ActionResult<Payou
     return { ok: true, data: mockStore.getPayouts(accountId) };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   let query = supabase.from('payouts').select('*').eq('user_id', user.id).order('payout_date', { ascending: false });
@@ -148,9 +148,9 @@ export async function createPayout(input: { account_id?: string | null; amount: 
     return { ok: true, data: p };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data, error } = await supabase.from('payouts').insert({
@@ -171,9 +171,9 @@ export async function deletePayout(id: string): Promise<ActionResult> {
     return { ok: true, data: undefined };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { error } = await supabase.from('payouts').delete().eq('id', id).eq('user_id', user.id);
@@ -189,9 +189,9 @@ export async function getLifetimePropROI(): Promise<ActionResult<{ totalFees: nu
     return { ok: true, data: mockStore.getLifetimePropROI() };
   }
 
-  const { createClient } = await import('@/lib/supabase/server');
+  const { createClient, getUser } = await import('@/lib/supabase/server');
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getUser();
   if (!user) return { ok: false, error: 'Not authenticated' };
 
   const { data: accounts } = await supabase.from('accounts').select('challenge_fee').eq('user_id', user.id);
